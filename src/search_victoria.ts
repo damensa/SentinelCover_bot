@@ -5,7 +5,7 @@ const pdf = require('pdf-parse');
 const BAXI_DIR = 'C:/Users/dave_/Sentinel cover/manuals_calderas/BAXI';
 
 async function searchVictoria() {
-    const files = fs.readdirSync(BAXI_DIR).filter(f => f.endsWith('.pdf'));
+    const files = fs.readdirSync(BAXI_DIR).filter((f: string) => f.endsWith('.pdf'));
     console.log(`Searching in ${files.length} files...`);
 
     for (const file of files) {

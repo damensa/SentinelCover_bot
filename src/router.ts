@@ -19,13 +19,34 @@ export const BRAND_ROUTER: Record<string, BrandConfig> = {
     'normativa': { name: 'NORMATIVA', notebookId: '9a2e737d-1001-4fdb-8c82-f18ea9c8d8dc' }
 };
 
+export const BRAND_PHONETICS: Record<string, string> = {
+    'bisman': 'viessmann',
+    'viman': 'viessmann',
+    'vissman': 'viessmann',
+    'biesman': 'viessmann',
+    'roca': 'baxi',
+    'victoria': 'baxi',
+    'balan': 'vaillant',
+    'vailan': 'vaillant',
+    'baillante': 'vaillant',
+    'saunier': 'saunier',
+    'duval': 'saunier',
+    'sonier': 'saunier'
+};
+
 export function detectBrand(text: string): string {
     const normalized = text.toLowerCase();
+
+    // 1. Check direct keys in BRAND_ROUTER
     for (const key in BRAND_ROUTER) {
         if (key === 'normativa') continue;
-        if (normalized.includes(key) || (key === 'saunier' && normalized.includes('duval'))) {
-            return key;
-        }
+        if (normalized.includes(key)) return key;
     }
+
+    // 2. Check phonetics
+    for (const [phonetic, actual] of Object.entries(BRAND_PHONETICS)) {
+        if (normalized.includes(phonetic)) return actual;
+    }
+
     return 'normativa'; // Default to normativa if no brand is found
 }

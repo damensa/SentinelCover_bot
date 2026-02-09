@@ -5,10 +5,12 @@ import { OpenAI } from 'openai';
 
 const MANUALS_DIR = 'C:/Users/dave_/Sentinel cover/manuals_calderas';
 
-interface ModelMatch {
-    brand: string;
-    model: string;
+export interface ModelMatch {
+    brand: string | null;
+    model: string | null;
+    errorCode: string | null;
     filePath?: string;
+    actualBrandDir?: string;
 }
 
 export async function extractBrandAndModel(text: string, openai: OpenAI): Promise<ModelMatch> {
@@ -17,7 +19,11 @@ export async function extractBrandAndModel(text: string, openai: OpenAI): Promis
         messages: [
             {
                 role: "system",
-                content: "Extract the boiler brand and model from the user query. Output JSON: { brand: string | null, model: string | null }. If not sure, return null."
+                content: `Extract the boiler brand, model and any error code from the user query. 
+                Common brands: BAXI, Viessmann, Vaillant, Saunier Duval, Junkers, etc.
+                Output JSON: { brand: string | null, model: string | null, errorCode: string | null }. 
+                If the user says 'Bisman' or 'Viman', it's 'Viessmann'. 
+                If the user says 'Roca', it's 'BAXI'.`
             },
             { role: "user", content: text }
         ],
@@ -27,12 +33,13 @@ export async function extractBrandAndModel(text: string, openai: OpenAI): Promis
     const result = JSON.parse(response.choices[0].message.content || '{}');
     return {
         brand: result.brand,
-        model: result.model
+        model: result.model,
+        errorCode: result.errorCode
     };
 }
 
-export function findManualFile(brand: string, model: string): string | null {
-    if (!brand && !model) return null;
+export function findManualFile(brand: string | null, model: string | null): { filePath: string | null, actualBrandDir: string | null } {
+    if (!brand && !model) return { filePath: null, actualBrandDir: null };
 
     console.log(`Searching for manual: Brand=${brand}, Model=${model}`);
 
@@ -43,6 +50,7 @@ export function findManualFile(brand: string, model: string): string | null {
     }
 
     let matchedFilePath: string | null = null;
+    let actualBrandDir: string | null = null;
 
     if (normalizedBrand) {
         const dirs = fs.readdirSync(MANUALS_DIR);
@@ -54,7 +62,8 @@ export function findManualFile(brand: string, model: string): string | null {
 
         if (matchedDir) {
             console.log(`Found brand directory: ${matchedDir}`);
-            matchedFilePath = findInDir(path.join(MANUALS_DIR, matchedDir), model);
+            actualBrandDir = matchedDir;
+            matchedFilePath = findInDir(path.join(MANUALS_DIR, matchedDir), model || "");
         }
     }
 
@@ -66,12 +75,12 @@ export function findManualFile(brand: string, model: string): string | null {
             const filePath = findInDir(path.join(MANUALS_DIR, dir), model);
             if (filePath) {
                 console.log(`Fallback SUCCESS: Found in ${dir}`);
-                return filePath;
+                return { filePath, actualBrandDir: dir };
             }
         }
     }
 
-    return matchedFilePath;
+    return { filePath: matchedFilePath, actualBrandDir };
 }
 
 function findInDir(dir: string, model: string): string | null {
@@ -128,4 +137,15 @@ export async function getManualText(filePath: string): Promise<string> {
     const dataBuffer = fs.readFileSync(filePath);
     const data = await pdf(dataBuffer);
     return data.text;
+}
+
+export function validateErrorCode(manualText: string, errorCode: string | null): boolean {
+    if (!errorCode) return true; // Nothing to validate
+
+    // Normalize error code (e.g., "E01" -> "E01", "E-01" -> "E01")
+    const normalizedError = errorCode.toUpperCase().replace(/[^A-Z0-9]/g, '');
+
+    // Check if it exists in text (liberal match)
+    const textToCheck = manualText.toUpperCase().replace(/[^A-Z0-9]/g, '');
+    return textToCheck.includes(normalizedError);
 }

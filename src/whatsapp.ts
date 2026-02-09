@@ -9,7 +9,7 @@ import { generateRITEReport, ReportData, validateReportData } from './pdf-genera
 import dotenv from 'dotenv';
 import fs from 'fs';
 import path from 'path';
-import { extractBrandAndModel, findManualFile, getManualText } from './manual-retriever';
+import { extractBrandAndModel, findManualFile, getManualText, validateErrorCode } from './manual-retriever';
 
 const BRAND_HEADER = `🛡️ SENTINEL COVER | Assistent Tècnic
 Un servei de Effiguard Tech SL
@@ -156,12 +156,35 @@ client.on('message', async (msg) => {
         let manualContent = "";
         let manualFound = false;
 
-        if (modelMatch.brand && modelMatch.model) {
-            const manualPath = findManualFile(modelMatch.brand, modelMatch.model);
-            if (manualPath) {
-                console.log(`Manual found: ${manualPath}`);
-                manualContent = await getManualText(manualPath);
+        if (modelMatch.model) {
+            const { filePath, actualBrandDir } = findManualFile(modelMatch.brand, modelMatch.model);
+
+            // COHERENCE CHECK: Model matches a different brand than the one mentioned
+            if (modelMatch.brand && actualBrandDir && modelMatch.brand.toLowerCase() !== actualBrandDir.toLowerCase()) {
+                // Ignore ROCA/BAXI normalization for the alert
+                const brandNormalizer: Record<string, string> = { 'roca': 'baxi', 'victoria': 'baxi' };
+                const mb = brandNormalizer[modelMatch.brand.toLowerCase()] || modelMatch.brand.toLowerCase();
+                const ab = brandNormalizer[actualBrandDir.toLowerCase()] || actualBrandDir.toLowerCase();
+
+                if (mb !== ab) {
+                    await msg.reply(`Atenció: El model ${modelMatch.model} no pertany a la marca ${modelMatch.brand}. Pertany a la marca ${actualBrandDir}. Vols que busqui l'error en el quadern correcte o t'has equivocat de nom?`);
+                    return;
+                }
+            }
+
+            if (filePath) {
+                console.log(`Manual found: ${filePath}`);
+                manualContent = await getManualText(filePath);
                 manualFound = true;
+
+                // ERROR CODE CHECK: If model is correct but error code is not in manual
+                if (modelMatch.errorCode) {
+                    const errorExists = validateErrorCode(manualContent, modelMatch.errorCode);
+                    if (!errorExists) {
+                        await msg.reply(`He verificat el manual de ${modelMatch.model} i el codi ${modelMatch.errorCode} no consta en la llista oficial d'errors. Podries confirmar el codi o descriure el símptoma?`);
+                        return;
+                    }
+                }
             }
         }
 
