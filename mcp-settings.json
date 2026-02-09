@@ -1,0 +1,13 @@
+{
+    "mcpServers": {
+        "notebooklm": {
+            "command": "node",
+            "args": [
+                "C:/Users/dave_/.gemini/antigravity/scratch/notebooklm-mcp/dist/index.js"
+            ],
+            "env": {
+                "GOOGLE_APPLICATION_CREDENTIALS": "C:/Users/dave_/Sentinel cover/BOT/client_secret_203785551396-75r00ed1v0sdfe5lpg24s3k0ovrnvar5.apps.googleusercontent.com.json"
+            }
+        }
+    }
+}

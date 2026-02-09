@@ -1,0 +1,17 @@
+node_modules/
+dist/
+.env
+*.pdf
+*.ogg
+*.txt
+token.json
+.wwebjs_auth/
+seen_contacts.json
+subscriptors.json
+package-lock.json
+debug_output.txt
+output.txt
+simulation_result.txt
+drive_results.txt
+baxi_drive_results.txt
+temp_*
