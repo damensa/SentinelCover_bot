@@ -1,0 +1,13 @@
+@echo off
+echo Killing Node and Chrome processes...
+taskkill /F /IM node.exe /T
+taskkill /F /IM chrome.exe /T
+
+echo Waiting for processes to exit...
+timeout /t 3 /nobreak
+
+echo Removing session directory...
+rmdir /s /q ".wwebjs_auth"
+
+echo Starting bot...
+npm run bot

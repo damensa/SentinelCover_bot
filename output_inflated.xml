@@ -1,0 +1,59 @@
+
+<xfa:datasets xmlns:xfa="http://www.xfa.org/schema/xfa-data/1.0/"
+><xfa:data
+><DATA
+><NomCognoms
+/><NIF
+/><TXT_Num
+/><TXT_Tel
+/><TXT_Correu
+/><NomCognoms
+/><TXT_Rasic
+/><NIF
+/><TXT_Categoria
+/><DNIInstallador
+/><sAdreca
+><TXT_Num
+/><TXT_Tel
+/><TXT_Correu
+/></sAdreca
+><sAdreca
+><TXT_Num
+/><TXT_Tel
+/><TXT_Correu
+/></sAdreca
+><sTipus
+><CHK_Nova
+/><CHK_Ampliacio
+/><CHK_Modificacio
+/><SubFormAmplMod
+><DDLAmpliaMod
+/></SubFormAmplMod
+></sTipus
+><sRequisits
+><RB_Requisits
+/><sP1 xfa:dataNode="dataGroup"
+/><sP2 xfa:dataNode="dataGroup"
+/><AltresUsos xfa:dataNode="dataGroup"
+/><sG xfa:dataNode="dataGroup"
+/><sH xfa:dataNode="dataGroup"
+/><sTotes
+><InfoTensioAltre
+/><RB_Subministrament
+/><sTotes
+><sTotes xfa:dataNode="dataGroup"
+/></sTotes
+></sTotes
+></sRequisits
+><Persona
+/></DATA
+></xfa:data
+><dd:dataDescription xmlns:dd="http://ns.adobe.com/data-description/" dd:name="CON_INETisAliveDD"
+><CON_INET
+><soap:Body xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+><stns:isAlive xmlns:stns="http://www.bea.com/servers/wls/samples/examples/webservices/basic/aoc" dd:dataNode="dataGroup"
+/></soap:Body
+></CON_INET
+></dd:dataDescription
+></xfa:datasets
+>

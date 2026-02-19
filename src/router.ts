@@ -1,3 +1,5 @@
+import { normalizeText } from './manual-retriever';
+
 export interface BrandConfig {
     name: string;
     notebookId: string;
@@ -21,11 +23,26 @@ export const BRAND_ROUTER: Record<string, BrandConfig> = {
 
 export const BRAND_PHONETICS: Record<string, string> = {
     'bisman': 'viessmann',
+    'abismen': 'viessmann',
+    'abismat': 'viessmann',
+    'biaixement': 'viessmann',
+    'biaiximent': 'viessmann',
+    'biaixament': 'viessmann',
+    'bitodens': 'viessmann',
+    'vitodens': 'viessmann',
+    'abitodens': 'viessmann',
+    'abitudens': 'viessmann',
+    'habitodents': 'viessmann',
+    'viesman': 'viessmann',
+    'vaiman': 'viessmann',
     'viman': 'viessmann',
     'vissman': 'viessmann',
     'biesman': 'viessmann',
     'roca': 'baxi',
-    'victoria': 'baxi',
+    'a favor': 'fagor',
+    'afavor': 'fagor',
+    'fago': 'fagor',
+    'factor': 'fagor',
     'balan': 'vaillant',
     'vailan': 'vaillant',
     'baillante': 'vaillant',
@@ -35,18 +52,18 @@ export const BRAND_PHONETICS: Record<string, string> = {
 };
 
 export function detectBrand(text: string): string {
-    const normalized = text.toLowerCase();
+    const normalized = normalizeText(text);
 
-    // 1. Check direct keys in BRAND_ROUTER
+    // 1. PRIMER: Comprovar fonètiques
+    for (const [phonetic, actual] of Object.entries(BRAND_PHONETICS)) {
+        if (normalized.includes(normalizeText(phonetic))) return actual;
+    }
+
+    // 2. SEGON: Comprovar claus directes
     for (const key in BRAND_ROUTER) {
         if (key === 'normativa') continue;
-        if (normalized.includes(key)) return key;
+        if (normalized.includes(normalizeText(key))) return key;
     }
 
-    // 2. Check phonetics
-    for (const [phonetic, actual] of Object.entries(BRAND_PHONETICS)) {
-        if (normalized.includes(phonetic)) return actual;
-    }
-
-    return 'normativa'; // Default to normativa if no brand is found
+    return 'desconeguda';
 }

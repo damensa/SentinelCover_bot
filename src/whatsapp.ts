@@ -3,13 +3,140 @@ const { Client, LocalAuth, MessageMedia } = pkg;
 const qrcode = require('qrcode-terminal');
 import { OpenAI } from 'openai';
 import { detectBrand, BRAND_ROUTER } from './router';
-import { getDocText, listFolderFiles } from './services/google';
+import { listFolderFiles, getDocText, searchFiles, downloadFile } from './services/google';
 import { readSentinelFile } from './services/local';
 import { generateRITEReport, ReportData, validateReportData } from './pdf-generator';
 import dotenv from 'dotenv';
 import fs from 'fs';
 import path from 'path';
-import { extractBrandAndModel, findManualFile, getManualText, validateErrorCode } from './manual-retriever';
+import { extractBrandAndModel, findManualFile, getManualText, validateErrorCode, validateBrandModelWithCatalog, getCanonicalBrand, getCanonicalModel, getSmartContext, getKeywordContext } from './manual-retriever';
+import { FormFillerService, Elec1FormData } from './services/form-filler';
+import { dataExtractor } from './services/data-extractor';
+
+const formFiller = new FormFillerService();
+
+// State management for form filling
+interface UserState {
+    mode: 'chat' | 'form_elec1';
+    step: number;
+    data: Partial<Elec1FormData>;
+}
+
+const userState: Record<string, UserState> = {};
+
+async function handleFormFlow(msg: any, state: UserState) {
+    const text = msg.body.trim();
+
+    if (text.toLowerCase() === 'cancel·lar' || text.toLowerCase() === 'cancelar') {
+        delete userState[msg.from];
+        await msg.reply('❌ Procés certificat elèctric cancel·lat.');
+        return;
+    }
+
+    switch (state.step) {
+        case 0: // Waiting for Personal Data Block
+            await msg.reply('📝 *BLOC 1: DADES PERSONALS*\n\nSi us plau, envia\'m les dades del **Titular** i l\'**Adreça** de la instal·lació (Nom complet, NIF/NIE, Carrer, Número, Codi Postal i Població) en un sol missatge.');
+            state.step = 1;
+            break;
+
+        case 1: // Processing Personal Data Block
+            try {
+                const extracted = await dataExtractor.extractElec1Data(text, state.data);
+                state.data = { ...state.data, ...extracted };
+
+                // Minimal validation for block 1
+                if (!state.data.titular?.nomCognoms || !state.data.adreca?.codiPostal) {
+                    await msg.reply('⚠️ Sembla que falten algunes dades importants (Nom o Codi Postal). Me les pots tornar a passar o completar-les?');
+                    return;
+                }
+
+                await msg.reply('✅ Dades personals capturades.');
+                await msg.reply('⚡ *BLOC 2: DADES TÈCNIQUES*\n\nIndica\'m els detalls de la instal·lació:\n- **CUPS** (Codi de subministrament)\n- **Tipus d\'actuació** (Nova, Ampliació o Reforma)\n- **Requisits** (P1, P2 o MTD) i **Ús** (Habitatge, Local...)\n- Potència (kW), Tensió, Circuits, IGA, IGM, LGA i Terra');
+                state.step = 2;
+            } catch (e) {
+                await msg.reply('❌ Error processant les dades. Torna-ho a provar o escriu "cancel·lar".');
+            }
+            break;
+
+        case 2: // Processing Technical Data Block
+            try {
+                const extracted = await dataExtractor.extractElec1Data(text, state.data);
+                state.data = { ...state.data, ...extracted };
+
+                if (!state.data.caracteristiques?.potenciaMax && !state.data.caracteristiques?.cups) {
+                    await msg.reply('⚠️ Em falten dades per poder continuar (Potència o CUPS).');
+                    return;
+                }
+
+                await msg.reply('✅ Dades tècniques rebudes.');
+                await msg.reply('📝 *BLOC 3: OBSERVACIONS*\n\nVols afegir alguna observació o nota important al certificat? (Escriu la teva nota o "no" per acabar)');
+                state.step = 3;
+            } catch (e) {
+                await msg.reply('❌ Error processant dades tècniques.');
+            }
+            break;
+
+        case 3: // Processing Observations & Generating PDF
+            try {
+                if (text.toLowerCase() !== 'no') {
+                    const extracted = await dataExtractor.extractElec1Data(text, state.data);
+                    state.data = { ...state.data, ...extracted };
+                }
+
+                await msg.reply('⏳ Generant el certificat final amb el teu perfil d\'instal·lador, un moment...');
+
+                const formData: Elec1FormData = {
+                    titular: {
+                        nomCognoms: state.data.titular?.nomCognoms || '',
+                        nif: state.data.titular?.nif || ''
+                    },
+                    adreca: {
+                        nomVia: state.data.adreca?.nomVia || '',
+                        numero: state.data.adreca?.numero || '',
+                        codiPostal: state.data.adreca?.codiPostal || '',
+                        poblacio: state.data.adreca?.poblacio || 'Sabadell',
+                        pis: state.data.adreca?.pis || '',
+                        porta: state.data.adreca?.porta || ''
+                    },
+                    installacio: {
+                        nomVia: state.data.installacio?.nomVia || state.data.adreca?.nomVia || '',
+                        numero: state.data.installacio?.numero || state.data.adreca?.numero || '',
+                        codiPostal: state.data.installacio?.codiPostal || state.data.adreca?.codiPostal || '',
+                        poblacio: state.data.installacio?.poblacio || state.data.adreca?.poblacio || 'Sabadell'
+                    },
+                    caracteristiques: {
+                        potenciaMax: state.data.caracteristiques?.potenciaMax || '5.75',
+                        tensio: state.data.caracteristiques?.tensio || '230',
+                        circuits: state.data.caracteristiques?.circuits || '2',
+                        iga: state.data.caracteristiques?.iga || '25A',
+                        resistenciaAillament: state.data.caracteristiques?.resistenciaAillament || '100',
+                        resistenciaTerra: state.data.caracteristiques?.resistenciaTerra || '15',
+                        calibreCGP: state.data.caracteristiques?.calibreCGP || '',
+                        igm: state.data.caracteristiques?.igm || '',
+                        lga: state.data.caracteristiques?.lga || '',
+                        observacions: state.data.caracteristiques?.observacions || '',
+                        cups: state.data.caracteristiques?.cups || '',
+                        tipusActuacio: state.data.caracteristiques?.tipusActuacio || 'Nova',
+                        requisits: state.data.caracteristiques?.requisits || 'P1',
+                        us: state.data.caracteristiques?.us || 'Habitatge'
+                    }
+                };
+
+                const pdfPath = await formFiller.fillELEC1PDF(formData);
+
+                const media = MessageMedia.fromFilePath(pdfPath);
+                await msg.reply(media);
+                await msg.reply('✅ Certificat generat amb èxit! He inclòs les teves dades, els detalls tècnics i la certificat de l\'instal·lador.');
+
+                delete userState[msg.from];
+            } catch (e: any) {
+                console.error(e);
+                await msg.reply(`❌ Error generant el PDF: ${e.message}`);
+                delete userState[msg.from];
+            }
+            break;
+    }
+}
 
 const BRAND_HEADER = `🛡️ SENTINEL COVER | Assistent Tècnic
 Un servei de Effiguard Tech SL
@@ -55,6 +182,7 @@ const openai = new OpenAI({
 const client = new Client({
     authStrategy: new LocalAuth(),
     puppeteer: {
+        headless: true, // Force headless
         args: [
             '--no-sandbox',
             '--disable-setuid-sandbox',
@@ -62,18 +190,20 @@ const client = new Client({
             '--disable-accelerated-2d-canvas',
             '--no-first-run',
             '--no-zygote',
-            '--disable-gpu'
+            '--disable-gpu',
+            '--disable-extensions'
         ],
     },
-    webVersionCache: {
-        type: 'remote',
-        remotePath: 'https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/2.2412.54.html',
-    }
+    authTimeoutMs: 60000, // 60 seconds timeout
+    qrMaxRetries: 10,
+    restartOnAuthFail: true,
 });
 
 client.on('qr', (qr) => {
     console.log('--- NEW QR CODE GENERATED ---');
-    qrcode.generate(qr, { small: true });
+    console.log('If the terminal QR is unreadable, open this link:');
+    console.log(`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(qr)}`);
+    qrcode.generate(qr, { small: false });
     console.log('Please scan the QR code above with your WhatsApp.');
 });
 
@@ -86,7 +216,15 @@ client.on('auth_failure', (msg) => {
 });
 
 client.on('ready', () => {
-    console.log('WhatsApp Bot is ready and listening!');
+    console.log('--- WHATSAPP BOT IS READY AND LISTENING ---');
+});
+
+client.on('change_state', state => {
+    console.log('--- CLIENT STATE CHANGED ---:', state);
+});
+
+client.on('loading_screen', (percent, message) => {
+    console.log('--- LOADING SCREEN ---', percent, message);
 });
 
 client.on('disconnected', (reason) => {
@@ -94,6 +232,7 @@ client.on('disconnected', (reason) => {
 });
 
 client.on('message', async (msg) => {
+    console.log(`[DEBUG] RECEIVED MESSAGE: "${msg.body}" from ${msg.from}`);
     // Whitelist Check
     const whitelist = getWhitelist();
     const chat = await msg.getChat();
@@ -105,6 +244,8 @@ client.on('message', async (msg) => {
         console.log(`Accés denegat per al número: ${number}`);
         return;
     }
+
+    console.log(`[MSG] De: ${number} | Body: "${msg.body}" | Type: ${msg.type} | HasMedia: ${msg.hasMedia}`);
 
     let userText = "";
     let isAudio = false;
@@ -134,6 +275,7 @@ client.on('message', async (msg) => {
                 file: fs.createReadStream(tempPath),
                 model: 'whisper-1',
                 language: 'ca', // Millora resultats per a usuaris catalans
+                prompt: "Viessmann, Vitodens, Vaillant, Baxi, Roca, Ferroli, Saunier Duval, Junkers, Immergas, calderes, errors tècnics."
             });
 
             userText = transcription.text;
@@ -150,6 +292,22 @@ client.on('message', async (msg) => {
 
     if (!userText) return;
 
+    // --- FORM FILLING LOGIC START ---
+    const lowerText = userText.toLowerCase().trim();
+    const from = msg.from;
+
+    if (lowerText.includes('vull fer el certificat elèctric') || lowerText.includes('elec1')) {
+        userState[from] = { mode: 'form_elec1', step: 0, data: {} };
+        await handleFormFlow(msg, userState[from]);
+        return;
+    }
+
+    if (userState[from] && userState[from].mode === 'form_elec1') {
+        await handleFormFlow(msg, userState[from]);
+        return;
+    }
+    // --- FORM FILLING LOGIC END ---
+
     try {
         // 2. Extract Brand/Model and find Manual
         const modelMatch = await extractBrandAndModel(userText, openai);
@@ -157,66 +315,292 @@ client.on('message', async (msg) => {
         let manualFound = false;
 
         if (modelMatch.model) {
-            const { filePath, actualBrandDir } = findManualFile(modelMatch.brand, modelMatch.model);
+            // Determine the brand: Prioritize local phonetic detection
+            const localBrand = detectBrand(userText);
+            const userBrandRaw = (localBrand !== 'normativa') ? localBrand : (modelMatch.brand || 'normativa');
+            const canonicalUserBrand = getCanonicalBrand(userBrandRaw);
 
-            // COHERENCE CHECK: Model matches a different brand than the one mentioned
-            if (modelMatch.brand && actualBrandDir && modelMatch.brand.toLowerCase() !== actualBrandDir.toLowerCase()) {
-                // Ignore ROCA/BAXI normalization for the alert
-                const brandNormalizer: Record<string, string> = { 'roca': 'baxi', 'victoria': 'baxi' };
-                const mb = brandNormalizer[modelMatch.brand.toLowerCase()] || modelMatch.brand.toLowerCase();
-                const ab = brandNormalizer[actualBrandDir.toLowerCase()] || actualBrandDir.toLowerCase();
+            // Validation checks removed - go directly to NotebookLM when brand is detected
+            console.log(`[DEBUG] userText: "${userText}"`);
+            console.log(`[DEBUG] localBrand: "${localBrand}", modelMatch.brand: "${modelMatch.brand}"`);
+            console.log(`[DEBUG] userBrandRaw: "${userBrandRaw}", Canonical: "${canonicalUserBrand}"`);
+            console.log(`[DEBUG] Model: "${modelMatch.model}"`);
 
-                if (mb !== ab) {
-                    await msg.reply(`Atenció: El model ${modelMatch.model} no pertany a la marca ${modelMatch.brand}. Pertany a la marca ${actualBrandDir}. Vols que busqui l'error en el quadern correcte o t'has equivocat de nom?`);
-                    return;
+
+            const { filePath, actualBrandDir } = findManualFile(userBrandRaw, modelMatch.model);
+            const canonicalActualBrand = getCanonicalBrand(actualBrandDir);
+
+            console.log(`[DEBUG] actualBrandDir: "${actualBrandDir}", CanonicalActual: "${canonicalActualBrand}"`);
+            console.log(`[DEBUG] filePath: "${filePath}"`);
+
+            // Coherence check removed - trust brand detection
+
+            const finalCanonicalModel = getCanonicalModel(canonicalUserBrand, modelMatch.model) || modelMatch.model;
+
+            let finalFilePath = filePath;
+
+            // Fallback: Search on Google Drive if not found locally
+            if (!finalFilePath && modelMatch.model) { // Removed brand.notebookId !== 'N/A' check here, as it's done later for technical summaries
+                const detectedBrandKey = detectBrand(userText);
+                const extractedBrandCanonical = modelMatch.brand ? getCanonicalBrand(modelMatch.brand).toLowerCase() : 'normativa';
+                const finalBrandKey = detectedBrandKey !== 'normativa' ? detectedBrandKey : (extractedBrandCanonical !== 'desconeguda' ? extractedBrandCanonical : 'normativa');
+                const canonicalKey = finalBrandKey === 'normativa' ? 'normativa' : getCanonicalBrand(finalBrandKey).toLowerCase();
+                const brand = BRAND_ROUTER[canonicalKey] || BRAND_ROUTER[finalBrandKey] || { name: modelMatch.brand || 'Desconeguda', notebookId: 'N/A' };
+
+                if (brand.notebookId !== 'N/A') {
+                    try {
+                        console.log(`Searching for manual on Drive for ${brand.name} ${modelMatch.model}...`);
+                        const driveFiles = await searchFiles(brand.notebookId, modelMatch.model);
+                        const pdfFile = driveFiles?.find((f: any) => f.mimeType === 'application/pdf');
+
+                        if (pdfFile) {
+                            console.log(`✅ Found manual on Drive: ${pdfFile.name} (${pdfFile.id})`);
+                            const tmpPath = path.join(process.cwd(), `temp_drive_${pdfFile.id}.pdf`);
+                            await downloadFile(pdfFile.id, tmpPath);
+                            finalFilePath = tmpPath;
+                        }
+                    } catch (driveErr) {
+                        console.error('Error searching/downloading from Drive:', driveErr);
+                    }
                 }
             }
 
-            if (filePath) {
-                console.log(`Manual found: ${filePath}`);
-                manualContent = await getManualText(filePath);
-                manualFound = true;
+            if (finalFilePath) {
+                try {
+                    const fullManualText = await getManualText(finalFilePath);
+                    manualContent = getSmartContext(fullManualText, modelMatch.errorCode);
+                    manualFound = true;
+                    modelMatch.model = finalCanonicalModel; // Update for AI
+                    console.log(`Manual content extracted (${manualContent.length} chars).`);
 
-                // ERROR CODE CHECK: If model is correct but error code is not in manual
-                if (modelMatch.errorCode) {
-                    const errorExists = validateErrorCode(manualContent, modelMatch.errorCode);
-                    if (!errorExists) {
-                        await msg.reply(`He verificat el manual de ${modelMatch.model} i el codi ${modelMatch.errorCode} no consta en la llista oficial d'errors. Podries confirmar el codi o descriure el símptoma?`);
-                        return;
+                    // Cleanup if it was a temp file from Drive
+                    if (finalFilePath.includes('temp_drive_')) {
+                        fs.unlinkSync(finalFilePath);
                     }
+
+                    // ERROR CODE CHECK
+                    if (modelMatch.errorCode) {
+                        const errorExists = validateErrorCode(fullManualText, modelMatch.errorCode);
+                        if (!errorExists) {
+                            await msg.reply(`He verificat el manual de ${modelMatch.model} i el codi ${modelMatch.errorCode} no consta en la llista oficial d'errors. Podries confirmar el codi o descriure el símptoma?`);
+                            return;
+                        }
+                    }
+                } catch (err) {
+                    console.error('Error reading manual:', err);
                 }
             }
         }
 
-        const isNormativeQuery = userText.toLowerCase().includes('rite') || userText.toLowerCase().includes('legal') || userText.toLowerCase().includes('normativa') || userText.toLowerCase().includes('procediment');
-        const brandKey = isNormativeQuery ? 'normativa' : (modelMatch.brand?.toLowerCase() || detectBrand(userText));
-        const brand = BRAND_ROUTER[brandKey] || { name: modelMatch.brand || 'Desconeguda', notebookId: 'N/A' };
+        const isNormativeQuery = userText.toLowerCase().includes('rite') ||
+            userText.toLowerCase().includes('legal') ||
+            userText.toLowerCase().includes('normativa') ||
+            userText.toLowerCase().includes('procediment') ||
+            userText.toLowerCase().includes('distància') ||
+            userText.toLowerCase().includes('distancia') ||
+            userText.toLowerCase().includes('fums') ||
+            userText.toLowerCase().includes('xemeneia') ||
+            userText.toLowerCase().includes('tub') ||
+            userText.toLowerCase().includes('façana') ||
+            userText.toLowerCase().includes('instal·lació') ||
+            userText.toLowerCase().includes('pendiente') ||
+            userText.toLowerCase().includes('pendent');
 
-        console.log(`Routing to ${brand.name}...`);
+        // IMPORTANT: Use canonical brand key for routing
+        const detectedBrandKey = detectBrand(userText);
+        // Canonicalize the brand extracted by OpenAI if local detection fails
+        const extractedBrandCanonical = modelMatch.brand ? getCanonicalBrand(modelMatch.brand).toLowerCase() : 'normativa';
 
-        // 3. Query Context
+        // Determine the primary brand for manual lookup and brand-specific summaries
+        const finalBrandKey = (detectedBrandKey !== 'normativa' ? detectedBrandKey : (extractedBrandCanonical !== 'desconeguda' ? extractedBrandCanonical : 'normativa'));
+        const canonicalKey = finalBrandKey === 'normativa' ? 'normativa' : getCanonicalBrand(finalBrandKey).toLowerCase();
+
+        const brand = BRAND_ROUTER[canonicalKey] || { name: modelMatch.brand || 'Desconeguda', notebookId: 'N/A' };
+
+        console.log(`[DEBUG] Final Routing: key="${canonicalKey}", brandName="${brand.name}"`);
+
+        // 3. Technical Summaries (NotebookLM / Drive Folders)
+        let technicalSummaries = "";
+
+        // Determine folders to search: Always include brand folder + normativa folder if relevant
+        const foldersToSearch = [];
+        if (brand.notebookId !== 'N/A' && canonicalKey !== 'normativa') {
+            foldersToSearch.push({ id: brand.notebookId, name: brand.name, type: 'brand' });
+        }
+        if (isNormativeQuery || canonicalKey === 'normativa') {
+            const normativaConfig = BRAND_ROUTER['normativa'];
+            foldersToSearch.push({ id: normativaConfig.notebookId, name: normativaConfig.name, type: 'normativa' });
+        }
+
+        // --- MCP INTEGRATION START ---
+        // 3. Technical Summaries (via MCP / NotebookLM)
+        let mcpResponse = "";
+        const { mcpService } = require('./services/mcp-client');
+
+        // Determine if we should use MCP
+        const useMcp = brand.notebookId !== 'N/A' && canonicalKey !== 'normativa';
+
+        if (useMcp) {
+            try {
+                // await msg.reply("🔍 Consultant la documentació tècnica oficial..."); // Feedback
+                console.log(`[MCP] Querying NotebookLM for ${brand.name}...`);
+
+                const queryForNotebook = modelMatch.model
+                    ? `Busca informació sobre el model ${modelMatch.model}. ${userText}`
+                    : userText;
+
+                const rawResp = await mcpService.queryNotebook(brand.notebookId, queryForNotebook);
+
+                if (rawResp && !rawResp.startsWith("Error")) {
+                    mcpResponse = rawResp;
+                    technicalSummaries += `--- RESPOSTA OFICIAL DE LA MARCA (${brand.name}) ---\n${mcpResponse}\n\n`;
+                    console.log(`[MCP] Got response (${mcpResponse.length} chars)`);
+                } else {
+                    console.warn(`[MCP] Query failed for ${brand.name}: ${rawResp}`);
+                }
+
+            } catch (e) {
+                console.error("Error asking MCP:", e);
+                // technicalSummaries += "Error consultant NotebookLM. Es procedirà amb coneixement general.\n";
+            }
+        }
+
+        // Fallback or Augmentation: Normativa
+        if (isNormativeQuery) {
+            if (!useMcp) {
+                const normativaConfig = BRAND_ROUTER['normativa'];
+                if (normativaConfig && normativaConfig.notebookId) {
+                    try {
+                        if (!mcpResponse) {
+                            // await msg.reply("🔍 Consultant la normativa RITE...");
+                        }
+                        console.log(`[MCP] Querying Normativa...`);
+                        const rawResp = await mcpService.queryNotebook(normativaConfig.notebookId, userText);
+
+                        if (rawResp && !rawResp.startsWith("Error")) {
+                            technicalSummaries += `--- NORMATIVA RITE ---\n${rawResp}\n\n`;
+                            mcpResponse = rawResp;
+                        } else {
+                            console.warn(`[MCP] Normative query failed: ${rawResp}`);
+                        }
+                    } catch (e) {
+                        console.error("Error MCP Normativa:", e);
+                    }
+                }
+            }
+        }
+        // --- DIRECT NOTEBOOKLM RESPONSE ---
+        // Improvement: If we got a valid response from MCP (Brand or Normativa), send it directly.
+        // This avoids OpenAI reprocessing, saves tokens, and reduces latency.
+        if (mcpResponse && mcpResponse.length > 50 && !mcpResponse.includes("Error consultant")) {
+            console.log("[MCP] Direct Mode: Sending response directly to user.");
+            await msg.reply(technicalSummaries);
+            return;
+        }
+
+        // --- MCP INTEGRATION END ---
+
+        // Legacy Loop (Optional - kept for safety or removed if fully replaced)
+        // For now, let's skip the legacy loop if MCP worked, or run it as backup?
+        // The user wants to REPLACE the old logic essentially. 
+        // Let's just comment out or bypass the old loop if mcpResponse is good.
+
+        if (!mcpResponse) {
+            // ... Only run legacy loop if MCP failed ...
+            for (const folder of foldersToSearch) {
+                try {
+                    console.log(`Fetching summaries from folder: ${folder.name} (${folder.id})`);
+                    const files = await listFolderFiles(folder.id);
+
+                    // Filter logic
+                    const relevantFiles = files?.filter((f: any) => {
+                        const isDoc = f.mimeType === 'application/vnd.google-apps.document';
+                        const isPdf = f.mimeType === 'application/pdf';
+                        const fileNameUpper = f.name.toUpperCase();
+
+                        if (folder.type === 'normativa') {
+                            // In normative folder, we take everything relevant (usually PDFs)
+                            return isDoc || isPdf;
+                        } else {
+                            // In brand folders, we take Docs or PDFs
+                            return isDoc || isPdf;
+                        }
+                    }) || [];
+
+                    // --- NEW GLOBAL RETRIEVER LOGIC ---
+                    if (folder.type === 'normativa') {
+                        const { globalNormativeSearch } = require('./global-retriever');
+                        const globalContext = await globalNormativeSearch(userText, folder.id);
+                        technicalSummaries = globalContext + "\n\n" + technicalSummaries;
+                        continue; // Skip the old file-by-file loop for Normativa
+                    }
+
+                    for (const file of relevantFiles) {
+                        if (file.mimeType === 'application/vnd.google-apps.document') {
+                            const text = await getDocText(file.id);
+                            technicalSummaries += `--- RESUM TÈCNIC (${folder.name}): ${file.name} ---\n${text}\n\n`;
+                        } else if (file.mimeType === 'application/pdf') {
+                            // Brand PDF summaries (file-by-file is fine for these, usually small)
+                            console.log(`Extracting text from Brand PDF summary: ${file.name}`);
+                            const tmpPath = path.join(process.cwd(), `temp_sum_${file.id}.pdf`);
+                            await downloadFile(file.id, tmpPath);
+                            const text = await getManualText(tmpPath);
+
+                            // Simple 2-chunk context for brand PDFs
+                            let processedText = getKeywordContext(text, userText, 2);
+                            technicalSummaries += `--- RESUM TÈCNIC (${file.name}) ---\n${processedText}\n\n`;
+                            fs.unlinkSync(tmpPath);
+                        }
+                    }
+                } catch (e) {
+                    console.error(`Error fetching summaries from ${folder.name}:`, e);
+                }
+            }
+        }
+
+        // Final safety truncation for technicalSummaries (~20k tokens max)
+        technicalSummaries = technicalSummaries.substring(0, 80000);
+
+        // 4. Query Context
+
         const legalContext = `
-            - El RITE (Reglament d'Instal·lacions Tècniques als Edificis) regula les condicions de seguretat, eficiència i manteniment. 
-            - Per a la 'prova d'estanquitat', tot i que el RITE no especifica valors exactes, la norma UNE-EN 14336 estableix com a bona pràctica: 1,5 vegades la pressió de treball, amb un mínim de 6 bar.
+            - El RITE (Reglament d'Instal·lacions Tècniques als Edificis) regula les condicions de seguretat, eficiència i manteniment.
             - Les intervencions han de ser realitzades per personal qualificat i documentades en un informe RITE.
         `;
 
         const systemPrompt = `
             Ets l'enginyer tècnic d'Effiguard Tech SL a càrrec de SENTINEL PRO.
-            El teu to ha de ser: PRECIS, CULTE i DIRECTE al gra (estil d'enginyer).
-            
-            OBLIGATORI (Plantilla Sentinel Pro):
-            1. FILTRE DE CONTINGUT: Si l'usuari fa preguntes que no tenen res a veure amb reparació de calderes, manteniment tèrmic, normativa RITE o el funcionament del bot, NO les responguis. Utilitza exclusivament aquest missatge: 'Hola! Soc l'assistent de SentinelCover. El meu coneixement es limita exclusivament a la reparació de calderes, manuals tècnics i normativa RITE. No puc ajudar-te amb altres temes. Com puc ajudar-te amb la teva instal·lació actual?'
-            2. SIGUES PRECIS: Si l'usuari pregunta per un error, busca la taula de codis al manual i dona la solució exacta. Cita la pàgina si pots (ex: [Pàg. 24]).
-            3. CITA EL RITE: No diguis 'la normativa diu', digues 'Segons el RITE (IT 3), és obligatori fer...' basant-te en el context legal proporcionat.
-            4. TO PROFESSIONAL: Respostes CURTES, NUMERADES i amb les dades tècniques (bar, temperatures, CO) ben marcades en NEGRETA (ex: **1.2 bar**, **60°C**).
-            5. NO SIGUES VAGUE: Si el manual diu 1.2 bar, no diguis 'una mica de pressió', digues literalment '**1.2 bar**'.
-            6. ADMISSIÓ D'IGNORÀNCIA: Si no trobes el manual (Manual Trobat: NO), digues: 'No tinc el manual d'aquest model concret, vols que el busqui a internet o me'l puges al Drive?'.
-            
-            Idioma: CATALÀ.
-            Context Legal/Normatiu:
+            El teu objectiu és donar DADES TÈCNIQUES EXACTES i LEGALS.
+
+            ORDRE DE PRIORITAT D'INFORMACIÓ (CRÍTICA):
+
+            1. **PRIORITAT ABSOLUTA - RESUMS TÈCNICS (NotebookLM/Marca)**: 
+               - Si reps informació a la secció "FONT 1: RESUMS TÈCNICS", aquesta és la font OFICIAL i MÉS FIABLE.
+               - SEMPRE utilitza aquesta informació PRIMER i COMPLETAMENT.
+               - Si la resposta està aquí, NO diguis mai que "no disposes de la informació" o que "cal consultar el manual".
+               - Aquesta informació prové directament de la documentació oficial de la marca.
+
+            2. **PRIORITAT #2 - DOCUMENTS NORMATIUS (RITE/UNE)**:
+               - Per a preguntes d'instal·lació general, utilitza la informació normativa.
+
+            3. **PRIORITAT #3 - MANUAL OFICIAL (PDF)**:
+               - Només si no hi ha informació a les fonts anteriors.
+
+            REGLES CRÍTIQUES:
+            1. **USA LA INFORMACIÓ PROPORCIONADA**: Si reps dades als "RESUMS TÈCNICS", utilitza-les DIRECTAMENT. No diguis que no tens la informació.
+            2. **SIGUES ESPECÍFIC**: Proporciona dades tècniques exactes (distàncies, codis d'error, procediments).
+            3. **CITA LA FONT**: Digues d'on ve la informació ("Segons la documentació oficial de [marca]...").
+            4. **NO INVENTIS**: Només si REALMENT no tens cap dada, digues que no la trobes.
+            5. **EVITA RESPOSTES GENÈRIQUES**: Si tens informació específica, NO donis respostes vagues com "consulta el manual".
+
+            Idioma: CATALÀ TÈCNIC.
+            Estil: Professional, sec, basat en dades.
+            Context Legal/Normatiu (Introducció):
             ${legalContext}
         `;
+
+        console.log(`[DEBUG] Technical Summaries being sent to OpenAI (first 1000 chars):`);
+        console.log(technicalSummaries.substring(0, 1000));
 
         const completion = await openai.chat.completions.create({
             model: "gpt-4-turbo",
@@ -225,10 +609,17 @@ client.on('message', async (msg) => {
                 {
                     role: "user",
                     content: `
+                        --- FONT 1: RESUMS TÈCNICS (NotebookLM) ---
+                        ${technicalSummaries || 'No hi ha resums disponibles per aquesta marca.'}
+
+                        --- FONT 2: MANUAL OFICIAL (PDF) ---
                         Manual Trobat: ${manualFound ? 'SI' : 'NO'}
-                        Contingut Manual: ${manualContent.substring(0, 10000)} 
+                        Contingut del Manual (Extracte rellevant): 
+                        "${manualContent}" 
+                        
+                        --- DADES DE LA CONSULTA ---
                         Marca/Model Detectats: ${brand.name} ${modelMatch.model || ''}
-                        Context Legal: ${legalContext}
+                        Codi d'Error a buscar: ${modelMatch.errorCode || 'Cap'}
                         Consulta: ${userText}
                     `
                 }
@@ -243,12 +634,26 @@ client.on('message', async (msg) => {
             brandedResponse += `\n\n📖 Dada extreta del manual oficial indexat per Sentinel`;
         }
 
-        await msg.reply(brandedResponse || "Ho sento, no he pogut generar una resposta.");
+        try {
+            if (brandedResponse) {
+                await msg.reply(brandedResponse);
+            } else {
+                await msg.reply(aiResponse || "Ho sento, no he pogut generar una resposta.");
+            }
+        } catch (sendError: any) {
+            console.error('❌ Error enviant resposta WhatsApp:', sendError);
+            // Fallback: intentar enviar sense citar (reply pot fallar si el missatge original ha desaparegut)
+            try {
+                await client.sendMessage(msg.from, brandedResponse || aiResponse || "Error intern.");
+            } catch (retryError) {
+                console.error('❌ Error final en enviament:', retryError);
+            }
+        }
 
         // 5. Option for PDF Report
         if (userText.toLowerCase().includes('informe') || userText.toLowerCase().includes('pdf')) {
             const reportData: Partial<ReportData> = {
-                brand: brandKey !== 'normativa' ? brand.name : undefined,
+                brand: finalBrandKey !== 'normativa' ? brand.name : undefined,
                 technician: "Tècnic Sentinel",
                 client: "Client Final", // TODO: Detectar dades del client del text
                 issue: userText,

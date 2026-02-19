@@ -1,0 +1,138 @@
+<config xmlns="http://www.xfa.org/schema/xci/2.8/"
+><agent name="designer"
+><!--  [0..n]  --><destination
+>pdf</destination
+><pdf
+><!--  [0..n]  --><fontInfo
+/></pdf
+></agent
+><present
+><!--  [0..n]  --><pdf
+><!--  [0..n]  --><version
+>1.7</version
+><adobeExtensionLevel
+>3</adobeExtensionLevel
+><renderPolicy
+>client</renderPolicy
+><creator
+>Adobe LiveCycle Designer 11.0</creator
+><producer
+>Adobe LiveCycle Designer 11.0</producer
+><scriptModel
+>XFA</scriptModel
+><interactive
+>1</interactive
+><tagged
+>1</tagged
+><fontInfo
+><embed
+>0</embed
+></fontInfo
+><compression
+><level
+>6</level
+><compressLogicalStructure
+>1</compressLogicalStructure
+><compressObjectStream
+>1</compressObjectStream
+></compression
+><linearized
+>1</linearized
+><silentPrint
+><addSilentPrint
+>0</addSilentPrint
+><printerName
+/></silentPrint
+><viewerPreferences
+><duplexOption
+>simplex</duplexOption
+><numberOfCopies
+>0</numberOfCopies
+><printScaling
+>appDefault</printScaling
+><pickTrayByPDFSize
+>0</pickTrayByPDFSize
+><enforce
+/><ADBE_JSDebugger
+>delegate</ADBE_JSDebugger
+><ADBE_JSConsole
+>delegate</ADBE_JSConsole
+><addViewerPreferences
+>0</addViewerPreferences
+></viewerPreferences
+></pdf
+><common
+><data
+><xsl
+><uri
+/></xsl
+><outputXSL
+><uri
+/></outputXSL
+></data
+><log
+><to
+>memory</to
+><mode
+>overwrite</mode
+></log
+><template
+><base
+>D:\52596530s\OneDrive - Generalitat de Catalunya\Formularis temp\2025.02.14 - ELEC\</base
+></template
+></common
+><cache
+><macroCache
+/></cache
+><script
+><runScripts
+>server</runScripts
+></script
+><xdp
+><packets
+>*</packets
+></xdp
+><destination
+>pdf</destination
+><output
+><to
+>uri</to
+><uri
+>D:\52596530s\OneDrive - Generalitat de Catalunya\Formularis temp\2025.02.14 - ELEC\G346NSIN-156-01.pdf</uri
+></output
+></present
+><psMap
+><font typeface="Helvetica Light*" psName="Helvetica-Light" weight="normal" posture="normal"
+/><font typeface="Calibri" psName="Calibri" weight="normal" posture="normal"
+/><font typeface="Helvetica*" psName="Helvetica-Bold" weight="bold" posture="normal"
+/></psMap
+><acrobat
+><acrobat7
+><dynamicRender
+>required</dynamicRender
+></acrobat7
+><common
+><versionControl sourceBelow="maintain"
+/><validationMessaging
+>allMessagesIndividually</validationMessaging
+><data
+><xsl
+><uri
+/></xsl
+><outputXSL
+><uri
+/></outputXSL
+></data
+><template
+><base
+>D:\52596530s\OneDrive - Generalitat de Catalunya\Formularis temp\2025.02.14 - ELEC\</base
+><relevant
+/><uri
+/></template
+></common
+><autoSave
+/><validate
+>preSubmit</validate
+></acrobat
+></config
+>

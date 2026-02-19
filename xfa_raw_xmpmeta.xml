@@ -1,0 +1,110 @@
+<x:xmpmeta xmlns:x="adobe:ns:meta/" x:xmptk="Adobe XMP Core 5.2-c001 63.139439, 2011/06/07-10:39:26        "
+><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+>
+      <rdf:Description xmlns:xmp="http://ns.adobe.com/xap/1.0/" rdf:about=""
+>
+         <xmp:MetadataDate
+>2025-02-14T11:48:41Z</xmp:MetadataDate
+>
+         <xmp:CreatorTool
+>Adobe LiveCycle Designer 11.0</xmp:CreatorTool
+>
+         <xmp:ModifyDate
+>2025-02-14T09:36:27+01:00</xmp:ModifyDate
+>
+         <xmp:CreateDate
+>2025-02-14T09:36:27+01:00</xmp:CreateDate
+>
+      </rdf:Description
+>
+      <rdf:Description xmlns:pdf="http://ns.adobe.com/pdf/1.3/" rdf:about=""
+>
+         <pdf:Producer
+>Adobe LiveCycle Designer 11.0</pdf:Producer
+>
+      </rdf:Description
+>
+      <rdf:Description xmlns:xmpMM="http://ns.adobe.com/xap/1.0/mm/" rdf:about=""
+>
+         <xmpMM:DocumentID
+>uuid:69d475f0-3da5-41d9-84ef-27872b636f5a</xmpMM:DocumentID
+>
+         <xmpMM:InstanceID
+>uuid:7604d795-a5d2-4877-85e8-96b92fc05698</xmpMM:InstanceID
+>
+      </rdf:Description
+>
+      <rdf:Description xmlns:dc="http://purl.org/dc/elements/1.1/" rdf:about=""
+>
+         <dc:format
+>application/pdf</dc:format
+>
+         <dc:date
+>
+            <rdf:Seq
+>
+               <rdf:li rdf:parseType="Resource"
+>
+                  <rdf:value
+>02/12/2015</rdf:value
+>
+                  <dc:element-refinement
+>dc:created</dc:element-refinement
+>
+               </rdf:li
+>
+            </rdf:Seq
+>
+         </dc:date
+>
+         <dc:creator
+>
+            <rdf:Seq
+>
+               <rdf:li
+>Àrea d'Organització</rdf:li
+>
+            </rdf:Seq
+>
+         </dc:creator
+>
+         <dc:title
+>
+            <rdf:Alt
+>
+               <rdf:li xml:lang="x-default"
+>Certificat d'instal·lació elèctrica de baixa tensió</rdf:li
+>
+            </rdf:Alt
+>
+         </dc:title
+>
+      </rdf:Description
+>
+      <rdf:Description xmlns:desc="http://ns.adobe.com/xfa/promoted-desc/" rdf:about=""
+>
+         <desc:version rdf:parseType="Resource"
+>
+            <rdf:value
+>1.0</rdf:value
+>
+            <desc:ref
+>/template/subform[1]</desc:ref
+>
+         </desc:version
+>
+         <desc:department rdf:parseType="Resource"
+>
+            <rdf:value
+>Empresa i Ocupació</rdf:value
+>
+            <desc:ref
+>/template/subform[1]</desc:ref
+>
+         </desc:department
+>
+      </rdf:Description
+>
+   </rdf:RDF
+></x:xmpmeta
+>

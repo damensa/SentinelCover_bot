@@ -1,5 +1,5 @@
 import { detectBrand } from './router';
-import { extractBrandAndModel, findManualFile, validateErrorCode } from './manual-retriever';
+import { extractBrandAndModel, findManualFile, validateErrorCode, validateBrandModelWithCatalog } from './manual-retriever';
 import { OpenAI } from 'openai';
 import dotenv from 'dotenv';
 
@@ -28,9 +28,10 @@ async function runTests() {
     // 2. Consistency Test
     console.log('\n[2] Testing Consistency Check:');
     const consistencyCases = [
-        { brand: 'Viessmann', model: 'Victoria' }, // Should find Victoria in BAXI
-        { brand: 'BAXI', model: 'Victoria' },     // Should find Victoria in BAXI
-        { brand: 'Vaillant', model: 'Ecotec' }    // Should find Ecotec in Vaillant
+        { brand: 'Viessmann', model: 'Victoria' },
+        { brand: 'BAXI', model: 'Victoria' },
+        { brand: 'Vaillant', model: 'Ecotec' },
+        { brand: 'Saunier Duval', model: 'Victoria' } // Reported failure
     ];
 
     for (const c of consistencyCases) {
@@ -43,8 +44,23 @@ async function runTests() {
         }
     }
 
-    // 3. Error Code Extraction and Validation
-    console.log('\n[3] Testing Error Code Validation (requires OpenAI):');
+    // 3. Catalog Validation Test
+    console.log('\n[3] Testing Catalog Validation (with Accents and Phonetics):');
+    const catalogCases = [
+        { brand: 'Saunier Duval', model: 'Victòria', expected: false },
+        { brand: 'BAXI', model: 'Victòria', expected: true },
+        { brand: 'Viessmann', model: 'Vitodens', expected: true },
+        { brand: 'Saunier Duval', model: 'Themafast', expected: true },
+        { brand: 'biaixament', model: 'bitodens', expected: true }
+    ];
+
+    for (const c of catalogCases) {
+        const isValid = validateBrandModelWithCatalog(c.brand, c.model);
+        console.log(`Query: ${c.brand} ${c.model} -> Valid in Catalog: ${isValid} (Expected: ${c.expected})`);
+    }
+
+    // 4. Error Code Extraction and Validation
+    console.log('\n[4] Testing Error Code Validation (requires OpenAI):');
     const query = 'Tinc una BAXI Neodens Plus amb error E01';
     const extracted = await extractBrandAndModel(query, openai);
     console.log(`Extracted: Brand=${extracted.brand}, Model=${extracted.model}, Error=${extracted.errorCode}`);
