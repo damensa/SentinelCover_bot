@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="ca">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SentinelCover | L'Assistent de WhatsApp per a Instal·ladors d'Effiguard Tech</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@700&display=swap"
+        rel="stylesheet">
+    <!-- Framework & Icons -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dark: '#0f172a',
+                        primary: '#3b82f6',
+                        accent: '#60a5fa',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-dark text-slate-100">
+
+    <!-- Premium Navigation -->
+    <header class="glass-nav py-4">
+        <div class="container mx-auto px-6 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="bg-primary/20 p-2 rounded-xl border border-primary/30">
+                    <i class="fas fa-shield-halved text-primary text-xl"></i>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-2xl font-bold tracking-tight leading-none">Sentinel<span
+                            class="text-primary">Cover</span></span>
+                    <span class="text-[10px] uppercase tracking-[0.2em] text-slate-400 font-semibold">by Effiguard
+                        Tech</span>
+                </div>
+            </div>
+            <nav class="hidden md:flex gap-10 font-medium text-slate-400">
+                <a href="#funcions" class="hover:text-primary transition">Funcions</a>
+                <a href="#proximament" class="hover:text-primary transition">Roadmap</a>
+                <a href="#preus" class="hover:text-primary transition">Plans</a>
+            </nav>
+            <a href="https://wa.me/vostrenumero" class="btn-primary flex items-center gap-3">
+                <i class="fab fa-whatsapp text-xl"></i>
+                Provar Ara Free
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Hero -->
+    <section class="hero container mx-auto px-6 grid md:grid-cols-2 gap-16 items-center">
+        <div class="fade-up space-y-8 md:space-y-10">
+            <div
+                class="inline-flex items-center gap-2 bg-primary/10 text-primary px-5 py-2 rounded-full text-xs font-bold border border-primary/20">
+                <span class="relative flex h-2 w-2">
+                    <span
+                        class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+                </span>
+                SISTEMA OPERATIU PER A INSTAL·LADORS
+            </div>
+            <h1 class="text-5xl md:text-7xl font-bold leading-[1.1]">
+                Deixa la paperassa a <span class="gradient-text">SENTINEL</span>.
+            </h1>
+            <p class="text-lg md:text-xl text-slate-400 max-w-lg leading-relaxed">
+                Genera l'ELEC-1, l'ELEC-2 i la Declaració Responsable xerrant amb l'IA. El bot que sap de RITE, REBT i
+                manuals tècnics.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-6 pt-4">
+                <button class="btn-primary text-lg">
+                    Inicia el BUTLLETÍ Ara
+                </button>
+                <div class="flex items-center gap-4 text-slate-500">
+                    <div class="flex -space-x-3">
+                        <div
+                            class="w-10 h-10 rounded-full border-2 border-dark bg-slate-800 flex items-center justify-center text-[10px] sm:text-xs">
+                            <i class="fas fa-user"></i></div>
+                        <div
+                            class="w-10 h-10 rounded-full border-2 border-dark bg-slate-700 flex items-center justify-center text-[10px] sm:text-xs">
+                            <i class="fas fa-user-gear"></i></div>
+                        <div
+                            class="w-10 h-10 rounded-full border-2 border-dark bg-slate-600 flex items-center justify-center text-[10px] sm:text-xs">
+                            <i class="fas fa-bolt"></i></div>
+                    </div>
+                    <span class="text-xs sm:text-sm font-medium">+600 professionals ja estalvien 2h/dia</span>
+                </div>
+            </div>
+        </div>
+        <div class="hero-visual mt-10 md:mt-0">
+            <img src="assets/hero.png" alt="SentinelCover Hero Interface">
+        </div>
+    </section>
+
+    <!-- Interactive Features -->
+    <section id="funcions" class="py-32 relative">
+        <div class="container mx-auto px-6">
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="card group">
+                    <div
+                        class="w-16 h-16 bg-blue-500/10 rounded-2xl flex items-center justify-center mb-8 border border-blue-500/20 group-hover:bg-blue-500 group-hover:text-white transition-all duration-300">
+                        <i class="fas fa-file-invoice text-3xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">Butlletins en segons</h3>
+                    <p class="text-slate-400">Pla d'ELEC-1, Declaració Responsable i Contracte Manteniment. Tu parles,
+                        l'IA omple el PDF oficial.</p>
+                </div>
+                <div class="card group">
+                    <div
+                        class="w-16 h-16 bg-blue-500/10 rounded-2xl flex items-center justify-center mb-8 border border-blue-500/20 group-hover:bg-blue-500 group-hover:text-white transition-all duration-300">
+                        <i class="fas fa-project-diagram text-3xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">Esquema Unifilar IA</h3>
+                    <p class="text-slate-400">Dibuixa automàticament l'ELEC-2 (Unifilar) només descrivint els circuits
+                        per veu o text.</p>
+                </div>
+                <div class="card group">
+                    <div
+                        class="w-16 h-16 bg-blue-500/10 rounded-2xl flex items-center justify-center mb-8 border border-blue-500/20 group-hover:bg-blue-500 group-hover:text-white transition-all duration-300">
+                        <i class="fas fa-microchip text-3xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">Cerca Tècnica Avançada</h3>
+                    <p class="text-slate-400">Codis d'error de calderes i normativa RITE/REBT a l'instant. Amb tota la
+                        potència de NotebookLM.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- The Mockup Section -->
+    <section class="py-24 bg-slate-800/30">
+        <div class="container mx-auto px-6 flex flex-col md:flex-row items-center gap-20">
+            <div class="md:w-1/2">
+                <h2 class="text-4xl md:text-5xl font-bold mb-8 leading-tight">Efectivitat real al palmell de la mà.</h2>
+                <div class="space-y-6">
+                    <div class="flex gap-4">
+                        <div
+                            class="flex-shrink-0 w-12 h-12 bg-primary/20 rounded-xl flex items-center justify-center border border-primary/30">
+                            <i class="fas fa-camera text-primary"></i></div>
+                        <div>
+                            <h4 class="font-bold text-xl mb-1">Dades des del DNI/Etiquta</h4>
+                            <p class="text-slate-400 text-sm">Properament podràs enviar una foto del DNI o de l'etiqueta
+                                de la caldera i Sentinel traurà tota la info sol.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4">
+                        <div
+                            class="flex-shrink-0 w-12 h-12 bg-primary/20 rounded-xl flex items-center justify-center border border-primary/30">
+                            <i class="fas fa-database text-primary"></i></div>
+                        <div>
+                            <h4 class="font-bold text-xl mb-1">Intel·ligència de Negoci</h4>
+                            <p class="text-slate-400 text-sm">Control d'expedients i facturació automatitzada gràcies a
+                                la integració amb la teva base de dades.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="md:w-1/2">
+                <div class="whatsapp-mockup">
+                    <div class="wa-header">
+                        <div
+                            class="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center border border-primary/30">
+                            <i class="fas fa-shield-halved text-primary"></i>
+                        </div>
+                        <div>
+                            <p class="text-[14px] font-bold">SENTINEL PRO</p>
+                            <p class="text-[10px] text-green-500">Online • Effiguard Tech</p>
+                        </div>
+                    </div>
+                    <div class="wa-body">
+                        <div class="wa-msg bot">Hola! Soc en Sentinel. He vist que vols fer un esquema unifilar per a
+                            l'ELEC-2. Digue'm les dades del circuit C.</div>
+                        <div class="wa-msg user">Circuit C: Cuina, 3.5kW, 4mm, PIA 20A. Acabat.</div>
+                        <div class="wa-msg bot">Perfecte. Generant PDF amb 1 circuit a la columna C... He posat IGA de
+                            25A per defecte. Vols canviar-lo?</div>
+                        <div class="wa-msg user">No, perfecte. Genera el PDF.</div>
+                        <div class="wa-msg bot">📄 ELEC2_Sabadell_Client.pdf (124kb)<br>✅ Document llest! Recorda
+                            signar-lo digitalment.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Roadmap / Future -->
+    <section id="proximament" class="py-32 relative overflow-hidden">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold mb-4">El bot que creix amb tu</h2>
+                <p class="text-slate-400">Roadmap d'evolucio per a la digitalitzacio total.</p>
+            </div>
+            <div class="grid md:grid-cols-4 gap-6">
+                <div class="p-8 rounded-3xl bg-slate-800/50 border border-white/5 text-center">
+                    <div class="text-primary text-3xl mb-4"><i class="fas fa-bolt"></i></div>
+                    <h4 class="font-bold mb-2">Electricitat BT</h4>
+                    <span class="text-xs bg-green-500/20 text-green-400 px-3 py-1 rounded-full">ACTIU</span>
+                </div>
+                <div class="p-8 rounded-3xl bg-slate-800/50 border border-white/5 text-center">
+                    <div class="text-slate-500 text-3xl mb-4"><i class="fas fa-fire"></i></div>
+                    <h4 class="font-bold mb-2">RITE i Calefacció</h4>
+                    <span class="text-xs bg-primary/20 text-primary px-3 py-1 rounded-full">MARÇ 2026</span>
+                </div>
+                <div class="p-8 rounded-3xl bg-slate-800/50 border border-white/5 text-center">
+                    <div class="text-slate-500 text-3xl mb-4"><i class="fas fa-droplet"></i></div>
+                    <h4 class="font-bold mb-2">Instal·lacions d'Aigua</h4>
+                    <span class="text-xs bg-slate-700 text-slate-400 px-3 py-1 rounded-full">Q2 2026</span>
+                </div>
+                <div class="p-8 rounded-3xl bg-slate-800/50 border border-white/5 text-center">
+                    <div class="text-slate-500 text-3xl mb-4"><i class="fas fa-sun"></i></div>
+                    <h4 class="font-bold mb-2">Solar i Autoconsum</h4>
+                    <span class="text-xs bg-slate-700 text-slate-400 px-3 py-1 rounded-full">Q3 2026</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing -->
+    <section id="preus" class="py-32 bg-slate-900/50">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold mb-4">Plans que s'adapten al teu ritme</h2>
+                <p class="text-slate-400">Tria la suscripció que millor encaixa amb la teva feina.</p>
+            </div>
+            <div class="grid md:grid-cols-2 gap-10 max-w-5xl mx-auto">
+                <div class="card bg-slate-900 border-white/10 p-12">
+                    <h3 class="text-2xl font-bold mb-2">Professional</h3>
+                    <p class="text-slate-500 mb-8 italic">Ideal per a instal·ladors autònoms</p>
+                    <div class="text-5xl font-bold mb-10">15€<span
+                            class="text-lg text-slate-500 font-normal">/mes</span></div>
+                    <ul class="space-y-4 mb-12 text-slate-300">
+                        <li><i class="fas fa-check text-primary mr-3"></i> TOTS els formularis BT actius</li>
+                        <li><i class="fas fa-check text-primary mr-3"></i> Consultes NotebookLM il·limitades</li>
+                        <li><i class="fas fa-check text-primary mr-3"></i> Suport prioritari via WhatsApp</li>
+                        <li><i class="fas fa-check text-primary mr-3"></i> Fins a 10 expedients mensuals</li>
+                    </ul>
+                    <button
+                        class="w-full py-4 rounded-xl border-2 border-primary text-primary font-bold hover:bg-primary hover:text-white transition">Contractar
+                        Ara</button>
+                </div>
+                <div class="card bg-primary p-12 relative overflow-hidden">
+                    <div class="absolute -right-8 -top-8 w-32 h-32 bg-white/10 rounded-full"></div>
+                    <h3 class="text-2xl font-bold mb-2 text-white">Projecte Gremi</h3>
+                    <p class="text-blue-100 mb-8 italic">Solucions corporatives i associacions</p>
+                    <div class="text-5xl font-bold mb-10 text-white">Consultar</div>
+                    <ul class="space-y-4 mb-12 text-blue-50">
+                        <li><i class="fas fa-check text-white mr-3"></i> Preu especial per volum d'associats</li>
+                        <li><i class="fas fa-check text-white mr-3"></i> Personalització amb logo del Gremi</li>
+                        <li><i class="fas fa-check text-white mr-3"></i> Formació i integratació específica</li>
+                        <li><i class="fas fa-check text-white mr-3"></i> Gestió d'usuaris a gran escala</li>
+                    </ul>
+                    <button
+                        class="w-full py-4 rounded-xl bg-white text-primary font-bold hover:bg-slate-100 transition">Contacta
+                        amb Nosaltres</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Stats -->
+    <footer class="py-20 border-t border-white/5">
+        <div class="container mx-auto px-6 text-center">
+            <div class="flex flex-col items-center gap-6">
+                <div class="flex items-center gap-3">
+                    <div class="bg-primary/20 p-2 rounded-xl border border-primary/30">
+                        <i class="fas fa-shield-halved text-primary text-xl"></i>
+                    </div>
+                    <span class="text-2xl font-bold tracking-tight">Sentinel<span
+                            class="text-primary">Cover</span></span>
+                </div>
+                <p class="text-slate-500 max-w-md">La eina que està revolucionant el dia a dia dels instal·ladors de
+                    Catalunya. Més enllà de la IA, l'enginyeria al teu servei.</p>
+                <div class="flex gap-8 text-slate-400 text-sm">
+                    <a href="#" class="hover:text-primary transition">Legal</a>
+                    <a href="#" class="hover:text-primary transition">Privacitat</a>
+                    <a href="#" class="hover:text-primary transition">Effiguard Tech SL</a>
+                </div>
+                <p class="text-[10px] text-slate-700 mt-8 tracking-widest">SABADELL • 2026 • © TOTS ELS DRETS RESERVATS
+                </p>
+            </div>
+        </div>
+    </footer>
+
+</body>
+
+</html>

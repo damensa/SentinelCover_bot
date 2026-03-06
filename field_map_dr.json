@@ -1,0 +1,24 @@
+{
+    "Titular": {
+        "Nom": "DATA[0].TXT_Nom[0]",
+        "NIF": "DATA[0].TXT_NumID[0]"
+    },
+    "Instal·lació": {
+        "Tipus": "DATA[0].RB_TipusInstalacio[0]",
+        "CampReglamentari": "DATA[0].TXT_CampReglamentari[0]",
+        "CUPS": "DATA[0].TXT_NumCUPS[0]"
+    },
+    "Adreça": {
+        "NomVia": "DATA[0].ADRECA[0].ADRECA_POSTAL[0].NOM_VIA[0]",
+        "Número": "DATA[0].ADRECA[0].ADRECA_POSTAL[0].NUM_VIA[0]",
+        "Població": "DATA[0].ADRECA[0].ADRECA_POSTAL[0].POBLACIO[0]",
+        "CodiPostal": "DATA[0].ADRECA[0].ADRECA_POSTAL[0].CODI_POSTAL[0]",
+        "Comarca": "DATA[0].TXT_Comarca[0]",
+        "Municipi": "DATA[0].TXT_Municipi[0]"
+    },
+    "Declaració": {
+        "NomDeclarant": "DATA[0].sDeclaracio[0].TXT_Nom[0]",
+        "NIFDeclarant": "DATA[0].sDeclaracio[0].TXT_NumID[0]",
+        "TipusPersona": "DATA[0].sDeclaracio[0].RB_TipusPersona[0]"
+    }
+}

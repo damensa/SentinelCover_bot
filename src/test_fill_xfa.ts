@@ -12,28 +12,38 @@ async function fillPDF() {
 <xfa:datasets xmlns:xfa="http://www.xfa.org/schema/xfa-data/1.0/">
 <xfa:data>
 <DATA>
-    <sTitular>
-        <NomCognoms>TEST USER NAME</NomCognoms>
-        <NIF>12345678Z</NIF>
-    </sTitular>
-    <sAdreca>
-        <TXT_NomVia>Carrer de la Prova</TXT_NomVia>
-        <TXT_Num>123</TXT_Num>
-        <TXT_Pis>1</TXT_Pis>
-        <TXT_Porta>1</TXT_Porta>
-        <TXT_CodiPostal>08001</TXT_CodiPostal>
-        <TXT_Poblacio>BARCELONA</TXT_Poblacio>
-    </sAdreca>
-    <sInstallacio>
-         <TXT_NomVia>Carrer de la Instalacio</TXT_NomVia>
-         <TXT_Num>55</TXT_Num>
-         <TXT_Poblacio>GIRONA</TXT_Poblacio>
-         <TXT_CodiPostal>17001</TXT_CodiPostal>
-    </sInstallacio>
-    <sCaracteristiques>
-        <TXT_PotenciaMax>5.75</TXT_PotenciaMax>
-        <TXT_Tensio>230</TXT_Tensio>
-    </sCaracteristiques>
+    <principal>
+        <sTitular>
+            <NomCognoms>TEST USER NAME</NomCognoms>
+            <NIF>12345678Z</NIF>
+        </sTitular>
+        <sEmpresaIns>
+            <NomCognoms>INSTAL·LACIONS SABADELL S.L.</NomCognoms>
+            <TXT_Rasic>005001234</TXT_Rasic>
+            <NIF>B66123456</NIF>
+            <NomCognomsInstalador>JOAN GARCIA</NomCognomsInstalador>
+            <TXT_Categoria>BT-IE</TXT_Categoria>
+            <DNIInstallador>44556677Z</DNIInstallador>
+        </sEmpresaIns>
+        <sInstallacio>
+            <sAdreca>
+                <TXT_NomVia>Carrer de la Prova, 123</TXT_NomVia>
+                <TXT_Num>123</TXT_Num>
+                <TXT_Pis>1</TXT_Pis>
+                <TXT_Porta>1</TXT_Porta>
+                <TXT_CodiPostal>08202</TXT_CodiPostal>
+                <TXT_Poblacio>SABADELL</TXT_Poblacio>
+            </sAdreca>
+        </sInstallacio>
+        <sCaracteristiques>
+            <sRequisits>
+                <sTotes>
+                    <TXT_PotenciaMax>5.75</TXT_PotenciaMax>
+                    <TXT_Tensio>230</TXT_Tensio>
+                </sTotes>
+            </sRequisits>
+        </sCaracteristiques>
+    </principal>
 </DATA>
 </xfa:data>
 </xfa:datasets>

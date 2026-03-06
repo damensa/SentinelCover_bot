@@ -1,0 +1,77 @@
+{
+    "Titular": {
+        "NomCognoms": "DATA.principal.sTitular.NomCognoms",
+        "NIF": "DATA.principal.sTitular.NIF",
+        "Adreça": {
+            "NomVia": "DATA.principal.sTitular.TXT_NomVia",
+            "Número": "DATA.principal.sTitular.TXT_Num",
+            "Bloc": "DATA.principal.sTitular.TXT_Bloc",
+            "Escala": "DATA.principal.sTitular.TXT_Escala",
+            "Pis": "DATA.principal.sTitular.TXT_Pis",
+            "Porta": "DATA.principal.sTitular.TXT_Porta",
+            "CodiPostal": "DATA.principal.sTitular.TXT_CodiPostal",
+            "Població": "DATA.principal.sTitular.TXT_Poblacio",
+            "Telèfon": "DATA.principal.sTitular.TXT_Tel",
+            "Correu": "DATA.principal.sTitular.TXT_Correu"
+        }
+    },
+    "Empresa": {
+        "Nom": "DATA.principal.sEmpresaIns.NomCognoms",
+        "RASIC": "DATA.principal.sEmpresaIns.TXT_Rasic",
+        "NIF": "DATA.principal.sEmpresaIns.NIF",
+        "Instal·lador": "DATA.principal.sEmpresaIns.NomCognomsInstalador",
+        "Categoria": "DATA.principal.sEmpresaIns.TXT_Categoria",
+        "DNI_Instal·lador": "DATA.principal.sEmpresaIns.DNIInstallador",
+        "Adreça": {
+            "NomVia": "DATA.principal.sEmpresaIns.sAdreca.TXT_NomVia",
+            "Número": "DATA.principal.sEmpresaIns.sAdreca.TXT_Num",
+            "Bloc": "DATA.principal.sEmpresaIns.sAdreca.TXT_Bloc",
+            "Escala": "DATA.principal.sEmpresaIns.sAdreca.TXT_Escala",
+            "Pis": "DATA.principal.sEmpresaIns.sAdreca.TXT_Pis",
+            "Porta": "DATA.principal.sEmpresaIns.sAdreca.TXT_Porta",
+            "CodiPostal": "DATA.principal.sEmpresaIns.sAdreca.TXT_CodiPostal",
+            "Població": "DATA.principal.sEmpresaIns.sAdreca.TXT_Poblacio",
+            "Telèfon": "DATA.principal.sEmpresaIns.sAdreca.TXT_Tel",
+            "Correu": "DATA.principal.sEmpresaIns.sAdreca.TXT_Correu"
+        }
+    },
+    "Instal·lació": {
+        "Ubicació": {
+            "NomVia": "DATA.principal.sInstallacio.sAdreca.TXT_NomVia",
+            "Número": "DATA.principal.sInstallacio.sAdreca.TXT_Num",
+            "Bloc": "DATA.principal.sInstallacio.sAdreca.TXT_Bloc",
+            "Escala": "DATA.principal.sInstallacio.sAdreca.TXT_Escala",
+            "Pis": "DATA.principal.sInstallacio.sAdreca.TXT_Pis",
+            "Porta": "DATA.principal.sInstallacio.sAdreca.TXT_Porta",
+            "CodiPostal": "DATA.principal.sInstallacio.sAdreca.TXT_CodiPostal",
+            "Població": "DATA.principal.sInstallacio.sAdreca.TXT_Poblacio",
+            "Telèfon": "DATA.principal.sInstallacio.sAdreca.TXT_Tel",
+            "Correu": "DATA.principal.sInstallacio.sAdreca.TXT_Correu"
+        },
+        "Dades_Tècniques": {
+            "TipusActuació": "DATA.principal.sInstallacio.sCaracteristiques.sTipus.RB_TipusActuacio",
+            "CUPS": "DATA.principal.sInstallacio.sCaracteristiques.sTipus.TXT_CUPS",
+            "Ús": "DATA.principal.sInstallacio.sCaracteristiques.sRequisits.TXT_Us",
+            "PotènciaMàxima": "DATA.principal.sInstallacio.sCaracteristiques.sRequisits.sTotes.TXT_PotenciaMax",
+            "Calibre": "DATA.principal.sInstallacio.sCaracteristiques.sRequisits.sTotes.TXT_Calibre",
+            "Tensió": "DATA.principal.sInstallacio.sCaracteristiques.sRequisits.sTotes.TXT_Tensio",
+            "IGM": "DATA.principal.sInstallacio.sCaracteristiques.sRequisits.sTotes.TXT_IGM",
+            "Circuits": "DATA.principal.sInstallacio.sCaracteristiques.sRequisits.sTotes.TXT_Circuits",
+            "SeccióLGA": "DATA.principal.sInstallacio.sCaracteristiques.sRequisits.sTotes.TXT_SeccioLGA",
+            "MaterialConductor": "DATA.principal.sInstallacio.sCaracteristiques.sRequisits.sTotes.TXT_MaterialConductor",
+            "ResistènciaConductors": "DATA.principal.sInstallacio.sCaracteristiques.sRequisits.sTotes.TXT_ResistenciaConductors",
+            "UbicacióComptadors": "DATA.principal.sInstallacio.sCaracteristiques.sRequisits.sTotes.TXT_UbicacioComptadors",
+            "AïllamentTerra": "DATA.principal.sInstallacio.sCaracteristiques.sRequisits.sTotes.TXT_AillamentTerra",
+            "ResistènciaTerra": "DATA.principal.sInstallacio.sCaracteristiques.sRequisits.sTotes.TXT_ResistenciaTerra",
+            "Interruptor": "DATA.principal.sInstallacio.sCaracteristiques.sRequisits.sTotes.TXT_Interruptor",
+            "TipusConnexió": "DATA.principal.sInstallacio.sCaracteristiques.sRequisits.sTotes.TXT_TipusConnexio",
+            "Subministrament": "DATA.principal.sInstallacio.sCaracteristiques.sRequisits.sTotes.RB_Subministrament",
+            "Potència": "DATA.principal.sInstallacio.sCaracteristiques.sRequisits.sTotes.TXT_Potencia"
+        }
+    },
+    "Finalització": {
+        "Instal·ladorFinal": "DATA.principal.s9.NomCognomsInstalador",
+        "Observacions": "DATA.principal.s9.TXT_Observacions",
+        "Firma": "DATA.principal.s10.SignatureField1"
+    }
+}

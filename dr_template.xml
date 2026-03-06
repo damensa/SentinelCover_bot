@@ -1,0 +1,2197 @@
+
+<template xmlns:xliff="urn:oasis:names:tc:xliff:document:1.1" xmlns="http://www.xfa.org/schema/xfa-template/2.8/"
+><?formServer defaultPDFRenderFormat acrobat8.1static?><?formServer allowRenderCaching 0?><?formServer formModel both?><subform name="DATA" layout="tb" locale="es_ES" restoreState="auto"
+><pageSet
+><pageArea name="Page1" id="Page1"
+><contentArea x="30mm" y="30mm" w="170mm" h="259.051mm" name="CA"
+/><medium stock="a4" short="210mm" long="297mm"
+/><draw name="Image2" y="9.412mm" x="20.11mm" w="85.939mm" h="10mm"
+><value
+><image href="http://identitatcorporativa.gencat.cat/web/.content/Documentacio/descarregues/identificacio/BN/idbh_bn.jpg" contentType="image/jpg"
+/></value
+><ui
+><imageEdit
+/></ui
+><assist
+><speak
+>Logotip Generalitat de Catalunya</speak
+></assist
+></draw
+><draw name="Text16" y="242.876mm" x="10.063mm" w="30.218mm" h="5.2331mm" rotate="90"
+><ui
+><textEdit
+/></ui
+><value
+><text
+>G346NSIN-074 v15</text
+></value
+><font size="7pt" typeface="Arial" baselineShift="0pt"
+/><margin topInset="0.5mm" bottomInset="0.5mm" leftInset="0.5mm" rightInset="0.5mm"
+/><para spaceAbove="0pt" spaceBelow="0pt" textIndent="0pt" marginLeft="0pt" marginRight="0pt"
+/><?renderCache.bounds 12000 82823 0 0 0 -82823 0 0?><?renderCache.textRun 16 G346NSIN-074 v15 0 6944 84240 0 0 0 "Arial" 0 0 7000 ISO-8859-1?></draw
+><?templateDesigner expand 1?></pageArea
+><?templateDesigner expand 1?></pageSet
+><subform w="169.17mm" name="pag" layout="tb"
+><draw name="Titol" w="169.17mm" h="11.289mm"
+><ui
+><textEdit
+/></ui
+><value
+><exData contentType="text/html" xliff:rid="014A54FA-EAE0-40DB-A8D4-B6C5E3CF2FA9"
+><body xmlns="http://www.w3.org/1999/xhtml" xmlns:xfa="http://www.xfa.org/schema/xfa-data/1.0/" xfa:APIVersion="2.7.0.0"
+><p style="tab-interval:0.5in;tab-stops:left 0.5in left 1in left 1.5in left 2in left 2.5in left 3in left 3.5in left 4in left 4.5in left 5in left 5.5in left 6in left 6.497in left 6.5in left 7in;text-decoration:none;letter-spacing:0in"
+>Declaració responsable per a la posada en servei, la modificació, el canvi de titular o la baixa d'una instal·lació de seguretat industrial</p
+></body
+></exData
+></value
+><font typeface="Arial" size="12pt" weight="bold" baselineShift="0pt"
+/><margin topInset="0.5mm" bottomInset="1.4111mm" leftInset="0.5mm" rightInset="0.5mm"
+/><para spaceAbove="0pt" spaceBelow="0pt" textIndent="0pt" marginLeft="0pt" marginRight="0pt" vAlign="bottom"
+/><border
+><edge presence="hidden"
+/><edge presence="hidden"
+/><edge thickness="1mm"
+/><edge presence="hidden"
+/><corner
+/><corner
+/><corner thickness="1mm"
+/><corner
+/></border
+><assist role="H"
+><speak
+>Declaració responsable per a la posada en servei, la modificació, el canvi de titular o la baixa d'una instal·lació de seguretat industrial</speak
+></assist
+></draw
+><subform w="168.993mm" layout="tb" name="sAvis"
+><bind match="none"
+/><draw w="169.17mm" h="7.387mm" name="Nota"
+><font typeface="Myriad Pro" size="12pt" weight="bold" baselineShift="0pt"
+><fill
+><color value="128,128,128"
+/></fill
+></font
+><value
+><exData contentType="text/html"
+><body xmlns="http://www.w3.org/1999/xhtml" xmlns:xfa="http://www.xfa.org/schema/xfa-data/1.0/" xfa:APIVersion="2.7.0.0"
+><p style="font-family:Arial;letter-spacing:0in"
+>NOTA: Les dades declarades han de fer referència a una única instal·lació</p
+></body
+></exData
+></value
+><ui
+><textEdit
+/></ui
+><margin leftInset="0.5mm" rightInset="0.5mm" topInset="0.5mm" bottomInset="0.5mm"
+/><para vAlign="middle" spaceAbove="0pt" spaceBelow="0pt" textIndent="0pt" marginLeft="0pt" marginRight="0pt"
+/><border
+><edge presence="hidden"
+/><edge presence="hidden"
+/><edge thickness="1mm"
+/><edge presence="hidden"
+/><corner
+/><corner
+/><corner thickness="1mm"
+/><corner
+/></border
+><assist
+><speak
+>NOTA: Les dades declarades han de fer referència a una única instal·lació</speak
+></assist
+></draw
+><?templateDesigner expand 0?></subform
+><subform w="170.264mm" name="sDadesTitular" layout="lr-tb"
+><bind match="none"
+/><draw h="5.644mm" name="Titol" w="169.17mm"
+><ui
+><textEdit
+/></ui
+><value
+><exData contentType="text/html"
+><body xmlns="http://www.w3.org/1999/xhtml" xmlns:xfa="http://www.xfa.org/schema/xfa-data/1.0/" xfa:APIVersion="2.7.0.0"
+><p style="font-weight:bold;text-decoration:none;letter-spacing:0in"
+>Dades del titular</p
+></body
+></exData
+></value
+><font baselineShift="0pt" typeface="Arial"
+/><margin bottomInset="0.5mm" leftInset="0.5mm" rightInset="0.5mm" topInset="0.5mm"
+/><para marginLeft="0pt" marginRight="0pt" spaceAbove="2pt" spaceBelow="0pt" textIndent="0pt"
+/><border
+><edge presence="hidden"
+/><edge presence="hidden"
+/><edge thickness="0.5292mm"
+/><edge presence="hidden"
+/><corner
+/><corner
+/><corner thickness="0.529mm"
+/><corner
+/></border
+><assist role="H1"
+><speak
+>Dades del titular</speak
+></assist
+></draw
+><field name="TXT_Nom" w="135mm" h="13.5mm"
+><ui
+><textEdit
+><border presence="hidden"
+><?templateDesigner StyleID aped0?></border
+><margin
+/></textEdit
+></ui
+><font size="8pt" typeface="Courier New"
+/><margin topInset="1mm" bottomInset="1mm" leftInset="0mm" rightInset="1mm"
+/><para vAlign="middle"
+/><caption reserve="5mm" placement="top"
+><font size="8pt" typeface="Arial"
+/><para vAlign="middle"
+/><value
+><text
+>Nom i cognoms/Raó social</text
+></value
+></caption
+><assist
+><speak priority="caption"
+/></assist
+></field
+><field name="TXT_NumID" w="34.17mm" h="13.316mm"
+><ui
+><textEdit
+><border presence="hidden"
+><?templateDesigner StyleID aped0?></border
+><margin
+/></textEdit
+></ui
+><font size="8pt" typeface="Courier New"
+/><margin topInset="1mm" bottomInset="1mm" leftInset="1mm" rightInset="0mm"
+/><para vAlign="middle"
+/><caption reserve="5mm" placement="top"
+><font size="8pt" typeface="Arial"
+/><para vAlign="middle"
+/><value
+><text
+>DNI/NIF/NIE/Passaport</text
+></value
+></caption
+><assist
+><speak priority="caption"
+/></assist
+></field
+><?templateDesigner expand 0?></subform
+><subform w="170.264mm" name="sDadesInstalacio" layout="tb"
+><bind match="none"
+/><draw h="5.644mm" name="Titol" w="169.17mm"
+><ui
+><textEdit
+/></ui
+><value
+><exData contentType="text/html"
+><body xmlns="http://www.w3.org/1999/xhtml" xmlns:xfa="http://www.xfa.org/schema/xfa-data/1.0/" xfa:APIVersion="2.7.0.0"
+><p style="font-weight:bold;letter-spacing:0in"
+>Dades de la instal·lació</p
+></body
+></exData
+></value
+><font baselineShift="0pt" typeface="Arial"
+/><margin bottomInset="0.5mm" leftInset="0.5mm" rightInset="0.5mm" topInset="0.5mm"
+/><para marginLeft="0pt" marginRight="0pt" spaceAbove="2pt" spaceBelow="0pt" textIndent="0pt"
+/><border
+><edge thickness="0.52mm"
+/><edge presence="hidden"
+/><edge thickness="0.5292mm"
+/><edge presence="hidden"
+/><corner thickness="0.52mm"
+/><corner
+/><corner thickness="0.529mm"
+/><corner
+/></border
+><assist role="H1"
+><speak
+>Dades de la instal·lació</speak
+></assist
+></draw
+><subform w="168.67mm" name="sTipusInstalacio" layout="tb"
+><bind match="none"
+/><draw h="5.803mm" name="Subtitol" w="169.17mm"
+><font typeface="Arial" size="8pt"
+/><margin bottomInset="0.5mm" leftInset="0.5mm" rightInset="0.5mm" topInset="0.5mm"
+/><para vAlign="middle"
+/><ui
+><textEdit
+/></ui
+><value
+><text
+>Indiqueu el tipus d'instal·lació (marqueu només una opció):</text
+></value
+><assist
+><speak
+>Indiqueu el tipus d'instal·lació (marqueu només una opció):</speak
+></assist
+><?renderCache.bounds 476703 13615 0 0 1417 1417 0 0?><?renderCache.textRun 63 Indiqueu el tipus d'instal·lació (marqueu només una opció): 0 1417 10540 0 0 0 "Arial" 0 0 8000 ISO-8859-1?></draw
+><exclGroup name="RB_TipusInstalacio" layout="tb"
+><?templateDesigner itemValuesSpecified 1?><field w="169.17mm" h="6mm" name="OPT_GruaTorre"
+><ui
+><checkButton
+><border
+><edge stroke="lowered"
+/><fill
+><color value="255, 255, 255"
+/></fill
+><?templateDesigner StyleID apcb2?></border
+></checkButton
+></ui
+><font typeface="Myriad Pro"
+/><margin leftInset="1mm" rightInset="1mm"
+/><para vAlign="middle"
+/><caption placement="right" reserve="161.435mm"
+><para vAlign="middle"
+/><font size="8pt" typeface="Arial"
+/><value
+><text
+>Grua Torre</text
+></value
+></caption
+><bind match="none"
+/><items
+><text
+>GTO</text
+></items
+><assist
+><speak priority="caption"
+/></assist
+></field
+><field w="169.17mm" h="6mm" name="OPT_GruaMobil"
+><ui
+><checkButton
+><border
+><edge stroke="lowered"
+/><fill
+><color value="255, 255, 255"
+/></fill
+><?templateDesigner StyleID apcb2?></border
+></checkButton
+></ui
+><font typeface="Myriad Pro"
+/><margin leftInset="1mm" rightInset="1mm"
+/><para vAlign="middle"
+/><caption placement="right" reserve="161.435mm"
+><para vAlign="middle"
+/><font size="8pt" typeface="Arial"
+/><value
+><text
+>Grua mòbil autopropulsada</text
+></value
+></caption
+><bind match="none"
+/><items
+><text
+>GMO</text
+></items
+><assist
+><speak priority="caption"
+/></assist
+></field
+><field w="169.17mm" h="6mm" name="OPT_Quimics"
+><ui
+><checkButton
+><border
+><edge stroke="lowered"
+/><fill
+><color value="255, 255, 255"
+/></fill
+><?templateDesigner StyleID apcb2?></border
+></checkButton
+></ui
+><font typeface="Myriad Pro"
+/><margin leftInset="1mm" rightInset="1mm"
+/><para vAlign="middle"
+/><caption placement="right" reserve="161.435mm"
+><para vAlign="middle"
+/><font size="8pt" typeface="Arial"
+/><value
+><text
+>Instal·lació d'emmagatzematge de productes químics</text
+></value
+></caption
+><bind match="none"
+/><items
+><text
+>QUI</text
+></items
+><assist
+><speak priority="caption"
+/></assist
+></field
+><field w="169.17mm" h="6mm" name="OPT_Pressio"
+><ui
+><checkButton
+><border
+><edge stroke="lowered"
+/><fill
+><color value="255, 255, 255"
+/></fill
+><?templateDesigner StyleID apcb2?></border
+></checkButton
+></ui
+><font typeface="Myriad Pro"
+/><margin leftInset="1mm" rightInset="1mm"
+/><para vAlign="middle"
+/><caption placement="right" reserve="161.435mm"
+><para vAlign="middle"
+/><font size="8pt" typeface="Arial"
+/><value
+><text
+>Instal·lació d'equips a pressió</text
+></value
+></caption
+><bind match="none"
+/><items
+><text
+>PRE</text
+></items
+><assist
+><speak priority="caption"
+/></assist
+></field
+><field w="169.17mm" h="6mm" name="OPT_Frigorifica"
+><ui
+><checkButton
+><border
+><edge stroke="lowered"
+/><fill
+><color value="255, 255, 255"
+/></fill
+><?templateDesigner StyleID apcb2?></border
+></checkButton
+></ui
+><font typeface="Myriad Pro"
+/><margin leftInset="1mm" rightInset="1mm"
+/><para vAlign="middle"
+/><caption placement="right" reserve="161.435mm"
+><para vAlign="middle"
+/><font size="8pt" typeface="Arial"
+/><value
+><text
+>Instal·lació frigorífica</text
+></value
+></caption
+><bind match="none"
+/><items
+><text
+>FRI</text
+></items
+><assist
+><speak priority="caption"
+/></assist
+></field
+><field w="169.17mm" h="6mm" name="OPT_BaixaTensio"
+><ui
+><checkButton
+><border
+><edge stroke="lowered"
+/><fill
+><color value="255, 255, 255"
+/></fill
+><?templateDesigner StyleID apcb2?></border
+></checkButton
+></ui
+><font typeface="Myriad Pro"
+/><margin leftInset="1mm" rightInset="1mm"
+/><para vAlign="middle"
+/><caption placement="right" reserve="161.435mm"
+><para vAlign="middle"
+/><font size="8pt" typeface="Arial"
+/><value
+><text
+>Instal·lació elèctrica de baixa tensió</text
+></value
+></caption
+><bind match="none"
+/><items
+><text
+>BTE</text
+></items
+><assist
+><speak priority="caption"
+/></assist
+></field
+><field w="169.17mm" h="6mm" name="OPT_AltaTensio"
+><ui
+><checkButton
+><border
+><edge stroke="lowered"
+/><fill
+><color value="255, 255, 255"
+/></fill
+><?templateDesigner StyleID apcb2?></border
+></checkButton
+></ui
+><font typeface="Myriad Pro"
+/><margin leftInset="1mm" rightInset="1mm"
+/><para vAlign="middle"
+/><caption placement="right" reserve="161.435mm"
+><para vAlign="middle"
+/><font size="8pt" typeface="Arial"
+/><value
+><text
+>Instal·lació elèctrica d'alta tensió</text
+></value
+></caption
+><bind match="none"
+/><items
+><text
+>ATE</text
+></items
+><assist
+><speak priority="caption"
+/></assist
+></field
+><field w="169.17mm" h="6mm" name="OPT_Petrolifera"
+><ui
+><checkButton
+><border
+><edge stroke="lowered"
+/><fill
+><color value="255, 255, 255"
+/></fill
+><?templateDesigner StyleID apcb2?></border
+></checkButton
+></ui
+><font typeface="Myriad Pro"
+/><margin leftInset="1mm" rightInset="1mm"
+/><para vAlign="middle"
+/><caption placement="right" reserve="161.435mm"
+><para vAlign="middle"
+/><font size="8pt" typeface="Arial"
+/><value
+><text
+>Instal·lació petrolífera per al consum a la mateixa instal·lació</text
+></value
+></caption
+><bind match="none"
+/><items
+><text
+>PET</text
+></items
+><assist
+><speak priority="caption"
+/></assist
+></field
+><field w="169.17mm" h="6mm" name="OPT_Termica"
+><ui
+><checkButton
+><border
+><edge stroke="lowered"
+/><fill
+><color value="255, 255, 255"
+/></fill
+><?templateDesigner StyleID apcb2?></border
+></checkButton
+></ui
+><font typeface="Myriad Pro"
+/><margin leftInset="1mm" rightInset="1mm"
+/><para vAlign="middle"
+/><caption placement="right" reserve="161.435mm"
+><para vAlign="middle"
+/><font size="8pt" typeface="Arial"
+/><value
+><text
+>Instal·lació tèrmica en un edifici</text
+></value
+></caption
+><bind match="none"
+/><items
+><text
+>TER</text
+></items
+><assist
+><speak priority="caption"
+/></assist
+></field
+><field w="169.17mm" h="6mm" name="OPT_Gasos"
+><ui
+><checkButton
+><border
+><edge stroke="lowered"
+/><fill
+><color value="255, 255, 255"
+/></fill
+><?templateDesigner StyleID apcb2?></border
+></checkButton
+></ui
+><font typeface="Myriad Pro"
+/><margin leftInset="1mm" rightInset="1mm"
+/><para vAlign="middle"
+/><caption placement="right" reserve="161.435mm"
+><para vAlign="middle"
+/><font size="8pt" typeface="Arial"
+/><value
+><text
+>Instal·lació de gasos combustibles</text
+></value
+></caption
+><bind match="none"
+/><items
+><text
+>GAS</text
+></items
+><assist
+><speak priority="caption"
+/></assist
+></field
+><field w="169.17mm" h="6mm" name="OPT_BancsSolars"
+><ui
+><checkButton
+><border
+><edge stroke="lowered"
+/><fill
+><color value="255, 255, 255"
+/></fill
+><?templateDesigner StyleID apcb2?></border
+></checkButton
+></ui
+><font typeface="Myriad Pro"
+/><margin leftInset="1mm" rightInset="1mm"
+/><para vAlign="middle"
+/><caption placement="right" reserve="161.435mm"
+><para vAlign="middle"
+/><font size="8pt" typeface="Arial"
+/><value
+><text
+>Instal·lació de bancs solars</text
+></value
+></caption
+><bind match="none"
+/><items
+><text
+>BAN</text
+></items
+><assist
+><speak priority="caption"
+/></assist
+></field
+><field w="169.17mm" h="6mm" name="OPT_ProteccioIncendis"
+><ui
+><checkButton
+><border
+><edge stroke="lowered"
+/><fill
+><color value="255, 255, 255"
+/></fill
+><?templateDesigner StyleID apcb2?></border
+></checkButton
+></ui
+><font typeface="Myriad Pro"
+/><margin leftInset="1mm" rightInset="1mm"
+/><para vAlign="middle"
+/><caption placement="right" reserve="161.435mm"
+><para vAlign="middle"
+/><font size="8pt" typeface="Arial"
+/><value
+><text
+>Instal·lació de protecció contra incendis</text
+></value
+></caption
+><bind match="none"
+/><items
+><text
+>INC</text
+></items
+><assist
+><speak priority="caption"
+/></assist
+></field
+><?templateDesigner expand 1?><assist
+><speak priority="caption"
+/></assist
+></exclGroup
+><?templateDesigner expand 0?></subform
+><subform name="sIdentificacio" w="169.47mm" layout="lr-tb"
+><bind match="none"
+/><draw h="5.484mm" name="Titol" w="169.17mm"
+><ui
+><textEdit
+/></ui
+><value
+><exData contentType="text/html"
+><body xmlns="http://www.w3.org/1999/xhtml" xmlns:xfa="http://www.xfa.org/schema/xfa-data/1.0/" xfa:APIVersion="2.7.0.0"
+><p style="font-weight:bold;text-decoration:none;letter-spacing:0in"
+>Identificació (empleneu aquestes dades només si tramiteu una modificació, un canvi de titular o una baixa)</p
+></body
+></exData
+></value
+><font baselineShift="0pt" typeface="Arial" size="8pt"
+/><margin bottomInset="0.5mm" leftInset="0.5mm" rightInset="0.5mm" topInset="0.5mm"
+/><para marginLeft="0pt" marginRight="0pt" spaceAbove="2pt" spaceBelow="0pt" textIndent="0pt" vAlign="middle"
+/><border
+><edge thickness="0.52mm"
+/><edge presence="hidden"
+/><edge thickness="0.5292mm"
+/><edge presence="hidden"
+/><corner thickness="0.52mm"
+/><corner
+/><corner thickness="0.529mm"
+/><corner
+/></border
+><assist role="H1"
+><speak
+>Identificació (empleneu aquestes dades només si tramiteu una modificació, un canvi de titular o una baixa)</speak
+></assist
+></draw
+><draw h="4.743mm" name="NumRegistre" w="169.17mm"
+><font typeface="Arial" size="8pt"
+/><margin bottomInset="0.5mm" leftInset="0.5mm" rightInset="0.5mm" topInset="0.5mm"
+/><para vAlign="bottom"
+/><ui
+><textEdit
+/></ui
+><value
+><text
+>Núm. de registre </text
+></value
+><border
+><edge thickness="0.25mm"
+/><edge presence="hidden"
+/><edge presence="hidden"
+/><edge presence="hidden"
+/><corner thickness="0.25mm"
+/><corner
+/><corner
+/><corner
+/></border
+><assist
+><speak
+>Núm. de registre </speak
+></assist
+><?renderCache.bounds 476703 10611 0 0 1417 1417 0 0?><?renderCache.textRun 18 Núm. de registre  0 1417 10344 0 0 0 "Arial" 0 0 8000 ISO-8859-1?></draw
+><field name="TXT_CampReglamentari" w="119.573mm" h="8mm"
+><ui
+><textEdit
+><border presence="hidden"
+><?templateDesigner StyleID aped0?></border
+><margin
+/></textEdit
+></ui
+><font typeface="Courier New" size="8pt"
+/><margin bottomInset="1mm" leftInset="1mm" rightInset="2.5mm" topInset="1mm"
+/><para hAlign="center" vAlign="middle"
+/><assist
+><speak
+>Núm. de registre </speak
+></assist
+></field
+><draw h="4.743mm" name="NumCUPS" w="169.17mm"
+><font typeface="Arial" size="8pt"
+/><margin bottomInset="0.5mm" leftInset="0.5mm" rightInset="0.5mm" topInset="0.5mm"
+/><para vAlign="bottom"
+/><ui
+><textEdit
+/></ui
+><value
+><exData contentType="text/html"
+><body xmlns="http://www.w3.org/1999/xhtml" xmlns:xfa="http://www.xfa.org/schema/xfa-data/1.0/" xfa:APIVersion="2.7.0.0"
+><p style="letter-spacing:0in"
+>Núm. CUPS<span style="xfa-spacerun:yes"
+> </span
+><span style="font-style:italic"
+>(només en el cas d'instal·lacions elèctriques)</span
+></p
+></body
+></exData
+></value
+><border
+><edge thickness="0.25mm"
+/><edge presence="hidden"
+/><edge presence="hidden"
+/><edge presence="hidden"
+/><corner thickness="0.25mm"
+/><corner
+/><corner
+/><corner
+/></border
+><assist
+><speak
+>Núm. CUPS (només en el cas d'instal·lacions elèctriques)</speak
+></assist
+></draw
+><field name="TXT_NumCUPS" w="119.573mm" h="8mm"
+><ui
+><textEdit
+><border presence="hidden"
+><?templateDesigner StyleID aped0?></border
+><margin
+/></textEdit
+></ui
+><font typeface="Courier New" size="8pt"
+/><margin bottomInset="1mm" leftInset="1mm" rightInset="2.5mm" topInset="1mm"
+/><para hAlign="center" vAlign="middle"
+/><assist
+><speak
+>Núm. CUPS (només en el cas d'instal·lacions elèctriques)</speak
+></assist
+></field
+><?templateDesigner expand 1?></subform
+><subform w="170.224mm" name="sAdreca" layout="lr-tb"
+><bind match="none"
+/><draw h="6mm" name="Titol" w="169.17mm"
+><ui
+><textEdit
+/></ui
+><value
+><exData contentType="text/html"
+><body xmlns="http://www.w3.org/1999/xhtml" xmlns:xfa="http://www.xfa.org/schema/xfa-data/1.0/" xfa:APIVersion="2.7.0.0"
+><p style="font-weight:bold;text-decoration:none;letter-spacing:0in"
+>Adreça</p
+></body
+></exData
+></value
+><font baselineShift="0pt" typeface="Arial" size="8pt"
+/><margin bottomInset="0.5mm" leftInset="0.5mm" rightInset="0.5mm" topInset="0.5mm"
+/><para marginLeft="0pt" marginRight="0pt" spaceAbove="2pt" spaceBelow="0pt" textIndent="0pt"
+/><border
+><edge thickness="0.5mm"
+/><edge presence="hidden"
+/><edge thickness="0.5292mm"
+/><edge presence="hidden"
+/><corner thickness="0.5mm"
+/><corner
+/><corner thickness="0.529mm"
+/><corner
+/></border
+><assist role="H1"
+><speak
+>Adreça</speak
+></assist
+></draw
+><field name="CBO_TipusVia" w="30mm" h="13.5mm"
+><ui
+><choiceList textEntry="1"
+><border presence="hidden"
+><?templateDesigner StyleID aped0?></border
+><margin
+/></choiceList
+></ui
+><font size="8pt" typeface="Courier New"
+/><margin topInset="1mm" bottomInset="1mm" leftInset="1mm" rightInset="1mm"
+/><para vAlign="middle"
+/><caption reserve="5mm" placement="top"
+><font size="8pt" typeface="Arial"
+/><para vAlign="middle"
+/><value
+><text
+>Tipus de via</text
+></value
+></caption
+><bind match="dataRef" ref="$.ADRECA.ADRECA_POSTAL.TIPUS_VIA"
+/><items
+><text
+> </text
+><text
+>Apartament</text
+><text
+>Avinguda</text
+><text
+>Baixada</text
+><text
+>Barranc</text
+><text
+>Barri</text
+><text
+>Bloc</text
+><text
+>Camí</text
+><text
+>Carrer</text
+><text
+>Carreró</text
+><text
+>Carretera</text
+><text
+>Cases</text
+><text
+>Colònia</text
+><text
+>Costa</text
+><text
+>Disseminat</text
+><text
+>Edifici</text
+><text
+>Fageda</text
+><text
+>Glorieta</text
+><text
+>Gran Via</text
+><text
+>Grup</text
+><text
+>Lloc</text
+><text
+>Mercat</text
+><text
+>Parc</text
+><text
+>Partida</text
+><text
+>Passatge</text
+><text
+>Passeig</text
+><text
+>Plaça</text
+><text
+>Placeta</text
+><text
+>Poblat</text
+><text
+>Polígon</text
+><text
+>Prolongació</text
+><text
+>Pujada</text
+><text
+>Rambla</text
+><text
+>Ronda</text
+><text
+>Senda</text
+><text
+>Torrent</text
+><text
+>Travessera</text
+><text
+>Travessia</text
+><text
+>Urbanització</text
+><text
+>Via</text
+><text
+>Xalet</text
+></items
+><items save="1" presence="hidden"
+><text
+>0</text
+><text
+>APA</text
+><text
+>AVI</text
+><text
+>BAI</text
+><text
+>BRC</text
+><text
+>BAR</text
+><text
+>BLO</text
+><text
+>CAM</text
+><text
+>CAR</text
+><text
+>CRO</text
+><text
+>CRT</text
+><text
+>CAS</text
+><text
+>COL</text
+><text
+>COS</text
+><text
+>DIS</text
+><text
+>EDI</text
+><text
+>FAG</text
+><text
+>GLO</text
+><text
+>GRV</text
+><text
+>GRU</text
+><text
+>LLO</text
+><text
+>MER</text
+><text
+>PAR</text
+><text
+>PTD</text
+><text
+>PTG</text
+><text
+>PAS</text
+><text
+>PLA</text
+><text
+>PCT</text
+><text
+>POB</text
+><text
+>POL</text
+><text
+>PRO</text
+><text
+>PUJ</text
+><text
+>RAM</text
+><text
+>RON</text
+><text
+>SEN</text
+><text
+>TOR</text
+><text
+>TRA</text
+><text
+>TVS</text
+><text
+>URB</text
+><text
+>VIA</text
+><text
+>XAL</text
+></items
+><assist
+><speak priority="caption"
+/></assist
+></field
+><field name="TXT_NomVia" w="110mm" h="13.5mm"
+><ui
+><textEdit
+><border presence="hidden"
+><?templateDesigner StyleID aped0?></border
+><margin
+/></textEdit
+></ui
+><font size="8pt" typeface="Courier New"
+/><margin topInset="1mm" bottomInset="1mm" leftInset="1mm" rightInset="1mm"
+/><para vAlign="middle"
+/><caption reserve="5mm" placement="top"
+><font size="8pt" typeface="Arial"
+/><para vAlign="middle"
+/><value
+><text
+>Nom de la via</text
+></value
+></caption
+><bind match="none"
+/><value
+><text maxChars="80"
+/></value
+><assist
+><speak priority="caption"
+/></assist
+></field
+><field name="TXT_NumVia" w="30mm" h="13.864mm"
+><ui
+><textEdit hScrollPolicy="off"
+><border presence="hidden"
+><?templateDesigner StyleID aped0?></border
+><margin
+/></textEdit
+></ui
+><font size="8pt" typeface="Courier New"
+/><margin topInset="1mm" bottomInset="1mm" leftInset="1mm" rightInset="1mm"
+/><para vAlign="middle"
+/><caption reserve="5mm" placement="top"
+><font size="8pt" typeface="Arial"
+/><para vAlign="middle"
+/><value
+><text
+>Número</text
+></value
+></caption
+><bind match="none"
+/><assist
+><speak priority="caption"
+/></assist
+></field
+><draw name="Linia0" w="170mm" h="0in"
+><value
+><line slope="/"
+><edge thickness="0.25mm"
+/></line
+></value
+></draw
+><field name="TXT_Comarca" w="85mm" h="13mm"
+><ui
+><textEdit
+><border presence="hidden"
+><?templateDesigner StyleID aped0?></border
+><margin
+/></textEdit
+></ui
+><font size="9pt" typeface="Courier New"
+/><margin topInset="1mm" bottomInset="1mm" leftInset="1mm" rightInset="1mm"
+/><para vAlign="middle"
+/><caption reserve="5.1348mm" placement="top"
+><font size="8pt" typeface="Arial"
+/><para vAlign="middle"
+/><value
+><text
+>Polígon industrial	</text
+></value
+></caption
+><bind match="none"
+/><value
+><text maxChars="80"
+/></value
+><assist
+><speak priority="caption"
+/></assist
+></field
+><field name="TXT_Provincia" w="84.17mm" h="13mm"
+><ui
+><textEdit
+><border presence="hidden"
+><?templateDesigner StyleID aped0?></border
+><margin
+/></textEdit
+></ui
+><font size="9pt" typeface="Courier New"
+/><margin topInset="1mm" bottomInset="1mm" leftInset="1mm" rightInset="1mm"
+/><para vAlign="middle"
+/><caption reserve="5.1348mm" placement="top"
+><font size="8pt" typeface="Arial"
+/><para vAlign="middle"
+/><value
+><text
+>Nau</text
+></value
+></caption
+><bind match="none"
+/><value
+><text maxChars="80"
+/></value
+><assist
+><speak priority="caption"
+/></assist
+></field
+><draw name="Linia0" w="170mm" h="0in"
+><value
+><line slope="/"
+><edge thickness="0.25mm"
+/></line
+></value
+></draw
+><field name="TXT_Bloc" w="33.6mm" h="13.5mm"
+><ui
+><textEdit
+><border presence="hidden"
+><?templateDesigner StyleID aped0?></border
+><margin
+/></textEdit
+></ui
+><font size="9pt" typeface="Courier New"
+/><margin topInset="1mm" bottomInset="1mm" leftInset="1mm" rightInset="1mm"
+/><para vAlign="middle"
+/><caption reserve="5mm" placement="top"
+><font size="8pt" typeface="Arial"
+/><para vAlign="middle"
+/><value
+><text
+>Bloc</text
+></value
+></caption
+><bind match="none"
+/><assist
+><speak priority="caption"
+/></assist
+></field
+><field name="TXT_Escala" w="34.4mm" h="13.5mm"
+><ui
+><textEdit
+><border presence="hidden"
+><?templateDesigner StyleID aped0?></border
+><margin
+/></textEdit
+></ui
+><font size="9pt" typeface="Courier New"
+/><margin topInset="1mm" bottomInset="1mm" leftInset="0mm" rightInset="2.5mm"
+/><para vAlign="middle"
+/><caption reserve="5mm" placement="top"
+><font size="8pt" typeface="Arial"
+/><para vAlign="middle"
+/><value
+><text
+>Escala</text
+></value
+></caption
+><bind match="none"
+/><value
+><text maxChars="10"
+/></value
+><assist
+><speak priority="caption"
+/></assist
+></field
+><field name="TXT_Pis" w="34.39mm" h="13.5mm"
+><ui
+><textEdit
+><border presence="hidden"
+><?templateDesigner StyleID aped0?></border
+><margin
+/></textEdit
+></ui
+><font size="9pt" typeface="Courier New"
+/><margin topInset="1mm" bottomInset="1mm" leftInset="0mm" rightInset="2.5mm"
+/><para vAlign="middle"
+/><caption reserve="5mm" placement="top"
+><font size="8pt" typeface="Arial"
+/><para vAlign="middle"
+/><value
+><text
+>Pis</text
+></value
+></caption
+><bind match="none"
+/><value
+><text maxChars="15"
+/></value
+><assist
+><speak priority="caption"
+/></assist
+></field
+><field name="TXT_Porta" w="34.272mm" h="13.5mm"
+><ui
+><textEdit
+><border presence="hidden"
+><?templateDesigner StyleID aped0?></border
+><margin
+/></textEdit
+></ui
+><font size="9pt" typeface="Courier New"
+/><margin topInset="1mm" bottomInset="1mm" leftInset="1mm" rightInset="2.5mm"
+/><para vAlign="middle"
+/><caption reserve="5mm" placement="top"
+><font size="8pt" typeface="Arial"
+/><para vAlign="middle"
+/><value
+><text
+>Porta</text
+></value
+></caption
+><bind match="none"
+/><assist
+><speak priority="caption"
+/></assist
+></field
+><field name="TXT_CodiPostal" w="33.079mm" h="13.5mm"
+><ui
+><numericEdit hScrollPolicy="off"
+><border hand="right"
+><?templateDesigner StyleID aped2?><edge
+/></border
+><margin
+/><comb numberOfCells="5"
+/></numericEdit
+></ui
+><font size="9pt" typeface="Courier New"
+/><margin topInset="1mm" bottomInset="1mm" leftInset="1mm" rightInset="1mm"
+/><para vAlign="middle"
+/><caption reserve="5mm" placement="top"
+><font size="8pt" typeface="Arial"
+/><para vAlign="middle"
+/><value
+><text
+>Codi postal</text
+></value
+></caption
+><bind match="none"
+/><format
+><picture
+>num{99999}</picture
+></format
+><assist
+><speak priority="caption"
+/></assist
+></field
+><draw name="Linia0" w="170mm" h="0in"
+><value
+><line slope="/"
+><edge thickness="0.25mm"
+/></line
+></value
+></draw
+><field name="TXT_Provincia" w="80mm" h="13.5mm"
+><ui
+><textEdit
+><border presence="hidden"
+><?templateDesigner StyleID aped0?></border
+><margin
+/></textEdit
+></ui
+><font size="9pt" typeface="Courier New"
+/><margin topInset="1mm" bottomInset="1mm" leftInset="1mm" rightInset="1mm"
+/><para vAlign="middle"
+/><caption reserve="5mm" placement="top"
+><font size="8pt" typeface="Arial"
+/><para vAlign="middle"
+/><value
+><text
+>Província</text
+></value
+></caption
+><bind match="none"
+/><value
+><text maxChars="80"
+/></value
+><assist
+><speak priority="caption"
+/></assist
+></field
+><field name="TXT_Comarca" w="90mm" h="13.5mm"
+><ui
+><textEdit
+><border presence="hidden"
+><?templateDesigner StyleID aped0?></border
+><margin
+/></textEdit
+></ui
+><font size="9pt" typeface="Courier New"
+/><margin topInset="1mm" bottomInset="1mm" leftInset="1mm" rightInset="1mm"
+/><para vAlign="middle"
+/><caption reserve="5mm" placement="top"
+><font size="8pt" typeface="Arial"
+/><para vAlign="middle"
+/><value
+><text
+>Comarca</text
+></value
+></caption
+><bind match="none"
+/><value
+><text maxChars="80"
+/></value
+><assist
+><speak priority="caption"
+/></assist
+></field
+><draw name="Linia0" w="170mm" h="0in"
+><value
+><line slope="/"
+><edge thickness="0.25mm"
+/></line
+></value
+></draw
+><field name="TXT_Municipi" w="60mm" h="13.5mm"
+><ui
+><textEdit
+><border presence="hidden"
+><?templateDesigner StyleID aped0?></border
+><margin
+/></textEdit
+></ui
+><font size="9pt" typeface="Courier New"
+/><margin topInset="1mm" bottomInset="1mm" leftInset="1mm" rightInset="1mm"
+/><para vAlign="middle"
+/><caption reserve="5mm" placement="top"
+><font size="8pt" typeface="Arial"
+/><para vAlign="middle"
+/><value
+><text
+>Municipi</text
+></value
+></caption
+><bind match="none"
+/><value
+><text maxChars="80"
+/></value
+><assist
+><speak priority="caption"
+/></assist
+></field
+><field name="TXT_Poblacio" w="60mm" h="13.5mm"
+><ui
+><textEdit
+><border presence="hidden"
+><?templateDesigner StyleID aped0?></border
+><margin
+/></textEdit
+></ui
+><font size="9pt" typeface="Courier New"
+/><margin topInset="1mm" bottomInset="1mm" leftInset="1mm" rightInset="1mm"
+/><para vAlign="middle"
+/><caption reserve="5mm" placement="top"
+><font size="8pt" typeface="Arial"
+/><para vAlign="middle"
+/><value
+><text
+>Població</text
+></value
+></caption
+><bind match="none"
+/><value
+><text maxChars="80"
+/></value
+><assist
+><speak priority="caption"
+/></assist
+></field
+><field name="TXT_Poblacio" w="49.17mm" h="13.5mm"
+><ui
+><textEdit
+><border presence="hidden"
+><?templateDesigner StyleID aped0?></border
+><margin
+/></textEdit
+></ui
+><font size="9pt" typeface="Courier New"
+/><margin topInset="1mm" bottomInset="1mm" leftInset="1mm" rightInset="1mm"
+/><para vAlign="middle"
+/><caption reserve="5mm" placement="top"
+><font size="8pt" typeface="Arial"
+/><para vAlign="middle"
+/><value
+><text
+>País</text
+></value
+></caption
+><bind match="none"
+/><value
+><text maxChars="80"
+/></value
+><assist
+><speak priority="caption"
+/></assist
+></field
+><draw name="Linia0" w="170mm" h="0in"
+><value
+><line slope="/"
+><edge thickness="0.5mm"
+/></line
+></value
+></draw
+><?templateDesigner expand 1?></subform
+><?templateDesigner expand 1?></subform
+><bind match="none"
+/><subform y="27.023mm" w="170.501mm" name="sDeclaracio" layout="lr-tb"
+><draw h="5.56mm" name="Titol" w="169.17mm"
+><ui
+><textEdit
+/></ui
+><value
+><exData contentType="text/html"
+><body xmlns="http://www.w3.org/1999/xhtml" xmlns:xfa="http://www.xfa.org/schema/xfa-data/1.0/" xfa:APIVersion="2.7.0.0"
+><p style="font-weight:bold;letter-spacing:0in"
+>Declaració</p
+></body
+></exData
+></value
+><font baselineShift="0pt" typeface="Arial"
+/><margin bottomInset="0.5mm" leftInset="0.5mm" rightInset="0.5mm" topInset="0.5mm"
+/><para marginLeft="0pt" marginRight="0pt" spaceAbove="2pt" spaceBelow="0pt" textIndent="0pt" vAlign="middle"
+/><border
+><edge thickness="0.5mm"
+/><edge presence="hidden"
+/><edge thickness="0.5292mm"
+/><edge presence="hidden"
+/><corner thickness="0.5mm"
+/><corner
+/><corner thickness="0.529mm"
+/><corner
+/></border
+><assist role="H1"
+><speak
+>Declaració</speak
+></assist
+></draw
+><field name="TXT_Nom" w="135mm" h="13.5mm"
+><ui
+><textEdit
+><border presence="hidden"
+><?templateDesigner StyleID aped0?></border
+><margin
+/></textEdit
+></ui
+><font size="8pt" typeface="Courier New"
+/><margin topInset="1mm" bottomInset="1mm" leftInset="0mm" rightInset="1mm"
+/><para vAlign="middle"
+/><caption reserve="5mm" placement="top"
+><font size="8pt" typeface="Arial"
+/><para vAlign="middle"
+/><value
+><text
+>Nom i cognoms</text
+></value
+></caption
+><event activity="exit" name="event__exit"
+><script contentType="application/x-javascript"
+>
+
+if (this.rawValue == null) app.alert ("Camp obligatori");
+</script
+></event
+><assist
+><speak priority="caption"
+/></assist
+></field
+><field name="TXT_NumID" w="34.17mm" h="13.5mm"
+><ui
+><textEdit
+><border presence="hidden"
+><?templateDesigner StyleID aped0?></border
+><margin
+/></textEdit
+></ui
+><font size="8pt" typeface="Courier New"
+/><margin topInset="1mm" bottomInset="1mm" leftInset="1mm" rightInset="0mm"
+/><para vAlign="middle"
+/><caption reserve="5mm" placement="top"
+><font size="8pt" typeface="Arial"
+/><para vAlign="middle"
+/><value
+><text
+>DNI/NIE/Passaport</text
+></value
+></caption
+><event activity="exit" name="event__exit"
+><script contentType="application/x-javascript"
+>
+if (this.rawValue == null) app.alert ("Camp obligatori");
+</script
+></event
+><assist
+><speak priority="caption"
+/></assist
+></field
+><draw name="Linia0" w="170mm" h="0in"
+><value
+><line slope="/"
+><edge thickness="0.25mm"
+/></line
+></value
+></draw
+><draw name="Actuant" w="6.684528in" h="4.744mm"
+><ui
+><textEdit
+/></ui
+><value
+><text
+>Actuant com a</text
+></value
+><font size="8pt" typeface="Arial"
+/><margin topInset="0.5mm" bottomInset="0.5mm" leftInset="0.5mm" rightInset="0.5mm"
+/><para vAlign="middle"
+/><assist
+><speak
+>Actuant com a</speak
+></assist
+><?renderCache.bounds 478452 10614 0 0 1417 1417 0 0?><?renderCache.textRun 13 Actuant com a 0 1417 9040 0 0 0 "Arial" 0 0 8000 ISO-8859-1?></draw
+><exclGroup name="RB_TipusPersona" layout="lr-tb"
+><?templateDesigner itemValuesSpecified 1?><field w="41.919mm" h="6mm" name="OPT_TIT"
+><ui
+><checkButton
+><border
+><edge stroke="lowered"
+/><fill
+><color value="255, 255, 255"
+/></fill
+><?templateDesigner StyleID apcb2?></border
+></checkButton
+></ui
+><font typeface="Myriad Pro"
+/><margin leftInset="1mm" rightInset="1mm"
+/><para vAlign="middle"
+/><caption placement="right" reserve="35.919mm"
+><para vAlign="middle"
+/><font typeface="Arial" size="8pt"
+/><value
+><text
+>Titular</text
+></value
+></caption
+><bind match="none"
+/><event activity="click" name="event__click"
+><script contentType="application/x-javascript"
+>
+scoDadesEmpresa2.mostraFisica ();
+scoDadesEmpresa2.mostraJuridica ();
+</script
+></event
+><event activity="initialize" name="event__initialize"
+><script contentType="application/x-javascript"
+>
+scoDadesEmpresa2.mostraFisica ();
+scoDadesEmpresa2.mostraJuridica ();
+</script
+></event
+><event activity="exit" name="event__exit"
+><script contentType="application/x-javascript"
+>
+scoDadesEmpresa2.mostraFisica ();
+scoDadesEmpresa2.mostraJuridica ();
+
+</script
+></event
+><items
+><text
+>FIS</text
+></items
+><assist
+><speak priority="caption"
+/></assist
+></field
+><field w="101.472mm" h="6mm" name="OPT_REP"
+><ui
+><checkButton
+><border
+><edge stroke="lowered"
+/><fill
+><color value="255, 255, 255"
+/></fill
+><?templateDesigner StyleID apcb2?></border
+></checkButton
+></ui
+><font typeface="Myriad Pro"
+/><margin leftInset="1mm" rightInset="1mm"
+/><para vAlign="middle"
+/><caption placement="right" reserve="95.472mm"
+><para vAlign="middle"
+/><font typeface="Arial" size="8pt"
+/><value
+><text
+>Representant legal/apoderat/ada</text
+></value
+></caption
+><bind match="none"
+/><event activity="exit" name="event__exit"
+><script contentType="application/x-javascript"
+>
+scoDadesEmpresa2.mostraFisica ();
+scoDadesEmpresa2.mostraJuridica ();
+
+if (this.rawValue == null) app.alert ("Camp obligatori");
+</script
+></event
+><event activity="click" name="event__click"
+><script contentType="application/x-javascript"
+>
+scoDadesEmpresa2.mostraFisica ();
+scoDadesEmpresa2.mostraJuridica ();
+</script
+></event
+><event activity="initialize" name="event__initialize"
+><script contentType="application/x-javascript"
+>
+scoDadesEmpresa2.mostraFisica ();
+scoDadesEmpresa2.mostraJuridica ();
+</script
+></event
+><items
+><text
+>JUR</text
+></items
+><assist
+><speak priority="caption"
+/></assist
+></field
+><event activity="initialize" name="event__initialize"
+><script contentType="application/x-javascript"
+>
+
+scoAvis.mostraAlerta();
+scoDesa.mostraBoto();
+</script
+></event
+><event activity="exit" name="event__exit"
+><script contentType="application/x-javascript"
+>if (this.rawValue == null) app.alert ("Camp obligatori");
+
+scoAvis.mostraAlerta();
+scoDesa.mostraBoto();
+</script
+></event
+><event activity="click" name="event__click"
+><script contentType="application/x-javascript"
+>
+
+scoAvis.mostraAlerta();
+scoDesa.mostraBoto();
+</script
+></event
+><?templateDesigner expand 1?></exclGroup
+><subform w="169.787mm" name="sDeclaracio" layout="lr-tb"
+><draw name="Linia0" w="170mm" h="0in"
+><value
+><line slope="/"
+><edge thickness="0.25mm"
+/></line
+></value
+></draw
+><draw name="DeclaracionsGeneriques" w="6.684528in" h="11.832mm"
+><ui
+><textEdit
+/></ui
+><value
+><exData contentType="text/html"
+><body xmlns="http://www.w3.org/1999/xhtml" xmlns:xfa="http://www.xfa.org/schema/xfa-data/1.0/" xfa:APIVersion="2.7.0.0"
+><p style="text-decoration:none;letter-spacing:0in"
+>Declaro de forma responsable:</p
+><p style="text-decoration:none;letter-spacing:0in"
+><span style="xfa-spacerun:yes"
+> </span
+></p
+><p style="font-weight:bold;text-decoration:none;letter-spacing:0in"
+>Declaracions genèriques<span style="xfa-spacerun:yes"
+> </span
+><span style="font-weight:normal"
+><span style="xfa-spacerun:yes"
+> </span
+></span
+></p
+></body
+></exData
+></value
+><font size="8pt" typeface="Arial" baselineShift="0pt"
+/><margin topInset="0.5mm" bottomInset="0.5mm" leftInset="0.5mm" rightInset="0.5mm"
+/><para spaceAbove="0pt" spaceBelow="0pt" textIndent="0pt" marginLeft="0pt" marginRight="0pt" vAlign="middle"
+/><assist
+><speak
+>Declaro de forma responsable:&#xD; &#xD;Declaracions genèriques  </speak
+></assist
+></draw
+><draw name="TXT_Blanc" w="3.672mm" h="12.091mm"
+><ui
+><textEdit
+><border
+><edge stroke="lowered"
+/></border
+><margin
+/></textEdit
+></ui
+><font size="8pt" typeface="Arial"
+/><margin topInset="1mm" bottomInset="1mm" leftInset="1mm" rightInset="1mm"
+/><para vAlign="middle"
+/><border
+><edge presence="hidden" thickness="0.25mm"
+/><edge presence="hidden"
+/><edge presence="hidden"
+/><edge presence="hidden"
+/><corner presence="hidden" thickness="0.25mm"
+/><corner
+/><corner
+/><corner
+/></border
+><caption placement="top" reserve="3.4836mm"
+><para vAlign="middle"
+/></caption
+></draw
+><draw name="Text17" w="164.579mm" h="11.681mm"
+><ui
+><textEdit
+/></ui
+><value
+><exData contentType="text/html"
+><body xmlns="http://www.w3.org/1999/xhtml" xmlns:xfa="http://www.xfa.org/schema/xfa-data/1.0/" xfa:APIVersion="2.7.0.0"
+><p style="letter-spacing:-0.02em"
+>- Que les dades de la instal·lació objecte d'aquesta declaració són les que consten al/s formulari/s que acompanyen aquest document.<span style="xfa-spacerun:yes"
+> </span
+></p
+><p style="letter-spacing:0in"
+><span style="xfa-spacerun:yes"
+>  </span
+></p
+><p style="letter-spacing:0in"
+>- Que en el cas de signar aquest document de forma manuscrita, em comprometo a conservar-ne l'original.</p
+></body
+></exData
+></value
+><font size="8pt" typeface="Arial" baselineShift="0pt"
+/><margin topInset="0.5mm" bottomInset="0.5mm" leftInset="0.5mm" rightInset="0.5mm"
+/><para spaceAbove="0pt" spaceBelow="0pt" textIndent="0pt" marginLeft="0pt" marginRight="0pt" vAlign="middle"
+/><assist
+><speak
+>- Que les dades de la instal·lació objecte d'aquesta declaració són les que consten al/s formulari/s que acompanyen aquest document. &#xD;  &#xD;- Que en el cas de signar aquest document de forma manuscrita, em comprometo a conservar-ne l'original.</speak
+></assist
+></draw
+><draw name="DeclaracionsEspecifiques" w="6.684528in" h="11.041mm"
+><ui
+><textEdit
+/></ui
+><value
+><exData contentType="text/html"
+><body xmlns="http://www.w3.org/1999/xhtml" xmlns:xfa="http://www.xfa.org/schema/xfa-data/1.0/" xfa:APIVersion="2.7.0.0"
+><p style="font-weight:bold;letter-spacing:0in"
+>Declaracions específiques</p
+><p style="letter-spacing:0in"
+><span style="xfa-spacerun:yes"
+> </span
+></p
+><p style="letter-spacing:0in"
+>En el cas de tramitar la posada en servei o la modificació de la instal·lació:<span style="xfa-spacerun:yes"
+> </span
+></p
+></body
+></exData
+></value
+><font size="8pt" typeface="Arial" baselineShift="0pt"
+/><margin topInset="0.5mm" bottomInset="0.5mm" leftInset="0.5mm" rightInset="0.5mm"
+/><para spaceAbove="0pt" spaceBelow="0pt" textIndent="0pt" marginLeft="0pt" marginRight="0pt" vAlign="middle"
+/><assist
+><speak
+>Declaracions específiques&#xD; &#xD;En el cas de tramitar la posada en servei o la modificació de la instal·lació: </speak
+></assist
+></draw
+><draw name="TXT_Blanc" w="3.463mm" h="14.442mm"
+><ui
+><textEdit
+><border
+><edge stroke="lowered"
+/></border
+><margin
+/></textEdit
+></ui
+><font size="8pt" typeface="Arial"
+/><margin topInset="1mm" bottomInset="1mm" leftInset="1mm" rightInset="1mm"
+/><para vAlign="middle"
+/><border
+><edge presence="hidden" thickness="0.25mm"
+/><edge presence="hidden"
+/><edge presence="hidden"
+/><edge presence="hidden"
+/><corner presence="hidden" thickness="0.25mm"
+/><corner
+/><corner
+/><corner
+/></border
+><caption placement="top" reserve="3.4836mm"
+><para vAlign="middle"
+/></caption
+></draw
+><draw name="Text17" w="161.707mm" h="24.594mm"
+><ui
+><textEdit
+/></ui
+><value
+><text
+>- Què d’acord amb el certificat d’instal·lació i, si escau, el certificat de direcció i acabament d’obra, la instal·lació compleix la normativa aplicable.
+
+- Que disposo de la documentació preceptiva per a la realització d’aquest tràmit.
+
+- Que em comprometo a complir les obligacions legals d'ús, manteniment i inspecció de la instal·lació descrita  previstes a la normativa aplicable.</text
+></value
+><font size="8pt" typeface="Arial" baselineShift="0pt"
+/><margin topInset="0.5mm" bottomInset="0.5mm" leftInset="0.5mm" rightInset="0.5mm"
+/><para spaceAbove="0pt" spaceBelow="0pt" textIndent="0pt" marginLeft="0pt" marginRight="0pt" vAlign="middle"
+/><assist
+><speak
+>- Què d’acord amb el certificat d’instal·lació i, si escau, el certificat de direcció i acabament d’obra, la instal·lació compleix la normativa aplicable.&#xD;&#xD;- Que disposo de la documentació preceptiva per a la realització d’aquest tràmit.&#xD;&#xD;- Que em comprometo a complir les obligacions legals d'ús, manteniment i inspecció de la instal·lació descrita  previstes a la normativa aplicable.</speak
+></assist
+><?renderCache.bounds 455548 66881 0 0 1417 1417 0 0?><?renderCache.textRun 146 - Què d’acord amb el certificat d’instal·lació i, si escau, el certificat de direcció i acabament d’obra, la instal·lació compleix la  0 1417 8373 0 0 0 "Arial" 0 0 8000 ISO-8859-1?><?renderCache.textRun 21 normativa aplicable.  0 1417 17973 0 0 0 "Arial" 0 0 8000 ISO-8859-1?><?renderCache.textRun 1   0 1417 27573 0 0 0 "Arial" 0 0 8000 ISO-8859-1?><?renderCache.textRun 87 - Que disposo de la documentació preceptiva per a la realització d’aquest tràmit.  0 1417 37173 0 0 0 "Arial" 0 0 8000 ISO-8859-1?><?renderCache.textRun 1   0 1417 46773 0 0 0 "Arial" 0 0 8000 ISO-8859-1?><?renderCache.textRun 131 - Que em comprometo a complir les obligacions legals d'ús, manteniment i inspecció de la instal·lació descrita  previstes a la  0 1417 56373 0 0 0 "Arial" 0 0 8000 ISO-8859-1?><?renderCache.textRun 20 normativa aplicable. 0 1417 65973 0 0 0 "Arial" 0 0 8000 ISO-8859-1?></draw
+><keep next="contentArea"
+/><draw name="Text18" w="6.684528in" h="4.509mm"
+><ui
+><textEdit
+/></ui
+><value
+><text
+>En el cas de tramitar el canvi de titular de la instal·lació:</text
+></value
+><font size="8pt" typeface="Arial" baselineShift="0pt"
+/><margin topInset="0.5mm" bottomInset="0.5mm" leftInset="0.5mm" rightInset="0.5mm"
+/><para spaceAbove="0pt" spaceBelow="0pt" textIndent="0pt" marginLeft="0pt" marginRight="0pt" vAlign="middle"
+/><assist
+><speak
+>En el cas de tramitar el canvi de titular de la instal·lació:</speak
+></assist
+><?renderCache.bounds 478452 9947 0 0 1417 1417 0 0?><?renderCache.textRun 63 En el cas de tramitar el canvi de titular de la instal·lació: 0 1417 8706 0 0 0 "Arial" 0 0 8000 ISO-8859-1?></draw
+><draw name="TXT_Blanc" w="3.463mm" h="14.442mm"
+><ui
+><textEdit
+><border
+><edge stroke="lowered"
+/></border
+><margin
+/></textEdit
+></ui
+><font size="8pt" typeface="Arial"
+/><margin topInset="1mm" bottomInset="1mm" leftInset="1mm" rightInset="1mm"
+/><para vAlign="middle"
+/><border
+><edge presence="hidden" thickness="0.25mm"
+/><edge presence="hidden"
+/><edge presence="hidden"
+/><edge presence="hidden"
+/><corner presence="hidden" thickness="0.25mm"
+/><corner
+/><corner
+/><corner
+/></border
+><caption placement="top" reserve="3.4836mm"
+><para vAlign="middle"
+/></caption
+></draw
+><draw name="Text17" w="161.707mm" h="14.757mm"
+><ui
+><textEdit
+/></ui
+><value
+><text
+>- Que disposo de la documentació preceptiva per a la realització d’aquest tràmit.
+
+- Que em comprometo a complir les obligacions legals d'ús, manteniment i inspecció de la instal·lació descrita previstes a la normativa aplicable.</text
+></value
+><font size="8pt" typeface="Arial" baselineShift="0pt"
+/><margin topInset="0.5mm" bottomInset="0.5mm" leftInset="0.5mm" rightInset="0.5mm"
+/><para spaceAbove="0pt" spaceBelow="0pt" textIndent="0pt" marginLeft="0pt" marginRight="0pt" vAlign="middle"
+/><assist
+><speak
+>- Que disposo de la documentació preceptiva per a la realització d’aquest tràmit.&#xD;&#xD;- Que em comprometo a complir les obligacions legals d'ús, manteniment i inspecció de la instal·lació descrita previstes a la normativa aplicable.</speak
+></assist
+><?renderCache.bounds 455548 38997 0 0 1417 1417 0 0?><?renderCache.textRun 87 - Que disposo de la documentació preceptiva per a la realització d’aquest tràmit.  0 1417 8831 0 0 0 "Arial" 0 0 8000 ISO-8859-1?><?renderCache.textRun 1   0 1417 18431 0 0 0 "Arial" 0 0 8000 ISO-8859-1?><?renderCache.textRun 130 - Que em comprometo a complir les obligacions legals d'ús, manteniment i inspecció de la instal·lació descrita previstes a la  0 1417 28031 0 0 0 "Arial" 0 0 8000 ISO-8859-1?><?renderCache.textRun 20 normativa aplicable. 0 1417 37631 0 0 0 "Arial" 0 0 8000 ISO-8859-1?></draw
+><draw name="Text18" w="6.684528in" h="4.509mm"
+><ui
+><textEdit
+/></ui
+><value
+><text
+>En el cas de tramitar la baixa de la instal·lació:</text
+></value
+><font size="8pt" typeface="Arial" baselineShift="0pt"
+/><margin topInset="0.5mm" bottomInset="0.5mm" leftInset="0.5mm" rightInset="0.5mm"
+/><para spaceAbove="0pt" spaceBelow="0pt" textIndent="0pt" marginLeft="0pt" marginRight="0pt" vAlign="middle"
+/><assist
+><speak
+>En el cas de tramitar la baixa de la instal·lació:</speak
+></assist
+><?renderCache.bounds 478452 9947 0 0 1417 1417 0 0?><?renderCache.textRun 52 En el cas de tramitar la baixa de la instal·lació: 0 1417 8706 0 0 0 "Arial" 0 0 8000 ISO-8859-1?></draw
+><draw name="TXT_Blanc" w="6.882mm" h="5.061mm"
+><ui
+><textEdit
+><border
+><edge stroke="lowered"
+/></border
+><margin
+/></textEdit
+></ui
+><font size="8pt" typeface="Arial"
+/><margin topInset="1mm" bottomInset="1mm" leftInset="1mm" rightInset="1mm"
+/><para vAlign="middle"
+/><border
+><edge presence="hidden" thickness="0.25mm"
+/><edge presence="hidden"
+/><edge presence="hidden"
+/><edge presence="hidden"
+/><corner presence="hidden" thickness="0.25mm"
+/><corner
+/><corner
+/><corner
+/></border
+><caption placement="top" reserve="0.9443mm"
+><para vAlign="middle"
+/></caption
+></draw
+><draw name="Baixa" w="129.62mm" h="4.551mm"
+><ui
+><textEdit
+/></ui
+><value
+><text
+>- Que la instal·lació ha quedat fora de servei.</text
+></value
+><font size="8pt" typeface="Arial" baselineShift="0pt"
+/><margin topInset="0.5mm" bottomInset="0.5mm" leftInset="0.5mm" rightInset="0.5mm"
+/><para spaceAbove="0pt" spaceBelow="0pt" textIndent="0pt" marginLeft="0pt" marginRight="0pt" vAlign="middle"
+/><assist
+><speak
+>- Que la instal·lació ha quedat fora de servei.</speak
+></assist
+><?renderCache.bounds 364593 10066 0 0 1417 1417 0 0?><?renderCache.textRun 49 - Que la instal·lació ha quedat fora de servei. 0 1417 8766 0 0 0 "Arial" 0 0 8000 ISO-8859-1?></draw
+><?templateDesigner expand 1?></subform
+><?templateDesigner expand 1?><breakBefore targetType="pageArea" startNew="1"
+/></subform
+><subform w="170.391mm" name="sSignatura" layout="lr-tb"
+><bind match="none"
+/><draw name="Text5" w="168.257mm" h="4.667mm"
+><ui
+><textEdit
+/></ui
+><value
+><text
+>Signatura</text
+></value
+><font typeface="Arial" weight="bold" baselineShift="0pt"
+/><margin topInset="0.5mm" bottomInset="0.5mm" leftInset="0mm" rightInset="0.5mm"
+/><para vAlign="middle" spaceAbove="0pt" spaceBelow="0pt" textIndent="0pt" marginLeft="0pt" marginRight="0pt"
+/><border
+><edge thickness="0.5mm"
+/><edge presence="hidden"
+/><edge thickness="0.5mm"
+/><edge presence="hidden"
+/><corner thickness="0.5mm"
+/><corner
+/><corner thickness="0.5mm"
+/><corner
+/></border
+><assist role="H1"
+><speak
+>Signatura</speak
+></assist
+><?renderCache.bounds 475532 10395 0 0 0 1417 0 0?><?renderCache.textRun 9 Signatura 0 0 9510 0 0 0 "Arial" 1 0 10000 ISO-8859-1?></draw
+><draw name="Text5" w="6.708306in" h="21.79mm"
+><ui
+><textEdit
+/></ui
+><value
+><exData contentType="text/html"
+><body xmlns="http://www.w3.org/1999/xhtml" xmlns:xfa="http://www.xfa.org/schema/xfa-data/1.0/" xfa:APIVersion="2.7.0.0"
+><p style="font-weight:bold;letter-spacing:0in"
+>Atenció:<span style="font-weight:normal"
+> només s'accepten els certificats digitals emesos per qualsevol entitat de certificació classificada per l'Agència Catalana de Certificació.<span style="xfa-spacerun:yes"
+> </span
+></span
+><a href="http://web.gencat.cat/ca/tramits/sobre-tramits-gencat/com-tramitar-en-linia/identificacio-digital/certificacio-digital/certificats-acceptats/" style="margin-top:0pt;margin-bottom:0pt;text-valign:middle;font-family:Arial;font-size:8pt"
+>Consulteu els llistat de certificats digitals admesos.</a
+></p
+><p style="letter-spacing:0in"
+><span style="xfa-spacerun:yes"
+> </span
+></p
+><p style="letter-spacing:0in"
+><span style="xfa-spacerun:yes"
+> </span
+>No s'admet la signatura amb ID digital autogenerat mitjançant el programari d'Adobe.<span style="xfa-spacerun:yes"
+> </span
+></p
+><p style="letter-spacing:0in"
+><span style="xfa-spacerun:yes"
+> </span
+></p
+><p style="letter-spacing:0in"
+><span style="xfa-spacerun:yes"
+> </span
+>Si vol signar amb DNI electrònic (eDNI), s'ha de deshabilitar el mode protegit del Reader X.<span style="xfa-spacerun:yes"
+> </span
+><a href="http://web.gencat.cat/ca/tramits/sobre-tramits-gencat/com-tramitar-en-linia/identificacio-digital/certificacio-digital/dni-electronic/" style="margin-top:0pt;margin-bottom:0pt;text-valign:middle;font-family:Arial;font-size:8pt"
+>Consulteu com realitzar-ho.<span style="xfa-spacerun:yes"
+> </span
+></a
+></p
+></body
+></exData
+></value
+><font size="8pt" typeface="Arial"
+/><margin topInset="0.5mm" bottomInset="0.5mm" leftInset="0mm" rightInset="0.5mm"
+/><para vAlign="middle"
+/><assist
+><speak
+>Atenció: només s'accepten els certificats digitals emesos per qualsevol entitat de certificació classificada per l'Agència Catalana de Certificació. Consulteu els llistat de certificats digitals admesos.&#xD; &#xD; No s'admet la signatura amb ID digital autogenerat mitjançant el programari d'Adobe. &#xD; &#xD; Si vol signar amb DNI electrònic (eDNI), s'ha de deshabilitar el mode protegit del Reader X. Consulteu com realitzar-ho. </speak
+></assist
+></draw
+><draw name="Text19" w="6.708306in" h="48.637mm"
+><ui
+><textEdit
+/></ui
+><value
+><exData contentType="text/html"
+><body xmlns="http://www.w3.org/1999/xhtml" xmlns:xfa="http://www.xfa.org/schema/xfa-data/1.0/" xfa:APIVersion="2.7.0.0"
+><p style="text-decoration:none;letter-spacing:0in"
+>S’informa que la inexactitud, falsedat o manca de dades de caràcter essencial, de qualsevol dada o informació que s’incorpori a la declaració responsable comporta un incompliment dels requisits establerts legalment i suposa l’inici de l’activitat d’inspecció i control de l’Administració prevista al títol VII de la Llei 26/2010, de 3 d’agost, de règim jurídic de les administracions públiques i del procediment administratiu comú.</p
+><p style="text-decoration:none;letter-spacing:0in"
+><span style="xfa-spacerun:yes"
+> </span
+></p
+><p style="text-decoration:none;letter-spacing:0in"
+>Es comunica que, d'acord amb el text refós de la Llei de taxes i preus públics de la Generalitat, aprovat per Decret legislatiu 3/2008, de 25 de juny, el pagament de la taxa s'ha d'efectuar prèviament a l'inici de l'activitat. Així mateix, s'informa que d'acord amb la norma esmentada, la manca de pagament de la taxa comporta un incompliment dels requisits establerts legalment i suposa l'inici de l'activitat d'inspecció i control de l'Administració previst al títol VII de la Llei 26/2010, de 3 d'agost, de règim jurídic i de procediment de les administracions públiques de Catalunya.<br
+/><br
+/>És convenient que us assegureu que heu emplenat correctament el formulari perquè d’acord amb l’article 1.2-14 del text refós de la Llei de taxes i preus públics de la Generalitat de Catalunya, aprovat pel Decret Legislatiu 3/2008, de 25 de juny i l’article 21 del Decret 277/1999, de 28 de setembre, en cas d'errors no es retornaran les taxes satisfetes.</p
+></body
+></exData
+></value
+><font size="8pt" typeface="Arial" weight="bold" baselineShift="0pt"
+><fill
+><color value="255,0,0"
+/></fill
+></font
+><margin topInset="0.5mm" bottomInset="0.5mm" leftInset="0.5mm" rightInset="0.5mm"
+/><para vAlign="middle" spaceAbove="0pt" spaceBelow="0pt" textIndent="0pt" marginLeft="0pt" marginRight="0pt"
+/><assist
+><speak
+>S’informa que la inexactitud, falsedat o manca de dades de caràcter essencial, de qualsevol dada o informació que s’incorpori a la declaració responsable comporta un incompliment dels requisits establerts legalment i suposa l’inici de l’activitat d’inspecció i control de l’Administració prevista al títol VII de la Llei 26/2010, de 3 d’agost, de règim jurídic de les administracions públiques i del procediment administratiu comú.&#xD; &#xD;Es comunica que, d'acord amb el text refós de la Llei de taxes i preus públics de la Generalitat, aprovat per Decret legislatiu 3/2008, de 25 de juny, el pagament de la taxa s'ha d'efectuar prèviament a l'inici de l'activitat. Així mateix, s'informa que d'acord amb la norma esmentada, la manca de pagament de la taxa comporta un incompliment dels requisits establerts legalment i suposa l'inici de l'activitat d'inspecció i control de l'Administració previst al títol VII de la Llei 26/2010, de 3 d'agost, de règim jurídic i de procediment de les administracions públiques de Catalunya.&#xD;&#xD;És convenient que us assegureu que heu emplenat correctament el formulari perquè d’acord amb l’article 1.2-14 del text refós de la Llei de taxes i preus públics de la Generalitat de Catalunya, aprovat pel Decret Legislatiu 3/2008, de 25 de juny i l’article 21 del Decret 277/1999, de 28 de setembre, en cas d'errors no es retornaran les taxes satisfetes.</speak
+></assist
+></draw
+><draw name="Text5" w="168.85mm" h="4.703mm"
+><ui
+><textEdit
+/></ui
+><value
+><text
+>Signatura</text
+></value
+><font size="8pt" typeface="Arial"
+/><margin topInset="0.5mm" bottomInset="0.5mm" leftInset="0mm" rightInset="0.5mm"
+/><para vAlign="middle"
+/><border
+><edge thickness="0.25mm"
+/><edge presence="hidden"
+/><edge presence="hidden"
+/><edge presence="hidden"
+/><corner thickness="0.25mm"
+/><corner
+/><corner
+/><corner
+/></border
+><assist
+><speak
+>Signatura</speak
+></assist
+><?renderCache.bounds 477213 10497 0 0 0 1417 0 0?><?renderCache.textRun 9 Signatura 0 0 8981 0 0 0 "Arial" 0 0 8000 ISO-8859-1?></draw
+><field name="SignatureField1" w="168.629mm" h="13.007mm"
+><ui
+><signature type="PDF1.6"
+><border
+><?templateDesigner StyleID aped3?><edge stroke="lowered"
+/></border
+><margin
+/><manifest action="all"
+/></signature
+></ui
+><font typeface="Myriad Pro"
+/><para vAlign="middle"
+/><event name="event__click" activity="click"
+><submit format="xml" textEncoding="UTF-8" target="mailto:"
+/></event
+><assist
+><speak
+>Signatura</speak
+></assist
+></field
+><draw name="Text5" w="168.85mm" h="2mm"
+><ui
+><textEdit
+/></ui
+><font size="8pt" typeface="Arial"
+/><margin topInset="0.5mm" bottomInset="0.5mm" leftInset="0mm" rightInset="0.5mm"
+/><para vAlign="middle"
+/><border
+><edge thickness="0.25mm" presence="hidden"
+/><edge presence="hidden"
+/><edge presence="hidden"
+/><edge presence="hidden"
+/><corner thickness="0.25mm" presence="hidden"
+/><corner
+/><corner
+/><corner
+/></border
+><?renderCache.bounds 477213 2835 0 0 0 1417 0 0?></draw
+><?templateDesigner expand 1?></subform
+><subform w="169.759mm" name="sLOPD" layout="tb"
+><bind match="none"
+/><draw name="TextLOPD" w="169.507mm" h="62.887mm"
+><ui
+><textEdit
+/></ui
+><value
+><exData contentType="text/html"
+><body xmlns="http://www.w3.org/1999/xhtml" xmlns:xfa="http://www.xfa.org/schema/xfa-data/1.0/" xfa:APIVersion="2.7.0.0"
+><p style="font-weight:bold;text-decoration:none;letter-spacing:0in"
+>Informació bàsica de protecció de dades relativa al tractament Expedients administratius i acreditacions en l'àmbit de seguretat industrial<span style="font-weight:normal"
+><br
+/><br
+/>Responsable del tractament: Direcció General d'Indústria.</span
+></p
+><p style="text-decoration:none;letter-spacing:0in"
+><br
+/><span style="letter-spacing:-0.02em"
+>Finalitat: gestionar els expedients administratius relatius a tràmits instats en l'àmbit de seguretat industrial, automòbils i metrologia així com les acreditacions professionals per exercir activitats en l'àmbit sectorial i els recursos en via administrativa que s'hi puguin substanciar.</span
+></p
+><p style="text-decoration:none;letter-spacing:0in"
+><br
+/>Drets de les persones interessades: teniu dret a accedir a les dades personals facilitades, rectificar-les, suprimir-les, oposar-vos i a sol·licitar la limitació en els supòsits previstos per la normativa vigent. Per exercir aquests drets, heu d'adreçar un escrit a la Subdirecció General de Personal, Organització i Prevenció de Riscos Laborals del Departament d'Empresa i Treball per correu postal (pg. de Gràcia, 105, 08008, Barcelona) o un correu electrònic a l'adreça<span style="xfa-spacerun:yes"
+> </span
+><a href="mailto:protecciodedades.empresa@gencat.cat" style="margin-top:0pt;margin-bottom:0pt;font-family:Arial;font-size:8pt"
+>protecciodedades.empresa@gencat.cat<span style="xfa-spacerun:yes"
+> </span
+></a
+>signat electrònicament amb DNI electrònic o certificat electrònic reconegut.</p
+><p style="text-decoration:none;letter-spacing:0in"
+><br
+/><span style="letter-spacing:-0.008em"
+>Més informació a<span style="xfa-spacerun:yes"
+> </span
+></span
+><a href="http://empresa.gencat.cat/ca/departament/proteccio-de-dades/info-addicional/llistat-per-unitats-responsables/empresa-competitivitat/direccio-general-denergia-seguretat-industrial-i-seguretat-minera/expedients-acreditacions-seguretat-industrial/" style="margin-top:0pt;margin-bottom:0pt;font-family:Arial;font-size:8pt"
+>http://empresa.gencat.cat/ca/departament/proteccio-de-dades/info-addicional/llistat-per-unitats-responsables/empresa-competitivitat/direccio-general-denergia-seguretat-industrial-i-seguretat-minera/expedients-acreditacions-seguretat-industrial/</a
+></p
+></body
+></exData
+></value
+><font size="8pt" typeface="Arial" baselineShift="0pt"
+/><margin topInset="1mm" bottomInset="1mm" leftInset="1mm" rightInset="1mm"
+/><border
+><edge thickness="0.5mm"
+/><edge presence="hidden"
+/><edge thickness="0.5mm"
+/><edge presence="hidden"
+/><corner thickness="0.5mm"
+/><corner
+/><corner thickness="0.5mm"
+/><corner
+/></border
+><para spaceAbove="0pt" spaceBelow="0pt" textIndent="0pt" marginLeft="0pt" marginRight="0pt"
+/><keep intact="none"
+/><assist
+><speak
+>Informació bàsica de protecció de dades relativa al tractament Expedients administratius i acreditacions en l'àmbit de seguretat industrial&#xD;&#xD;Responsable del tractament: Direcció General d'Indústria.&#xD;Finalitat: gestionar els expedients administratius relatius a tràmits instats en l'àmbit de seguretat industrial, automòbils i metrologia així com les acreditacions professionals per exercir activitats en l'àmbit sectorial i els recursos en via administrativa que s'hi puguin substanciar.&#xD;Drets de les persones interessades: teniu dret a accedir a les dades personals facilitades, rectificar-les, suprimir-les, oposar-vos i a sol·licitar la limitació en els supòsits previstos per la normativa vigent. Per exercir aquests drets, heu d'adreçar un escrit a la Subdirecció General de Personal, Organització i Prevenció de Riscos Laborals del Departament d'Empresa i Treball per correu postal (pg. de Gràcia, 105, 08008, Barcelona) o un correu electrònic a l'adreça protecciodedades.empresa@gencat.cat signat electrònicament amb DNI electrònic o certificat electrònic reconegut.&#xD;Més informació a http://empresa.gencat.cat/ca/departament/proteccio-de-dades/info-addicional/llistat-per-unitats-responsables/empresa-competitivitat/direccio-general-denergia-seguretat-industrial-i-seguretat-minera/expedients-acreditacions-seguretat-industrial/</speak
+></assist
+></draw
+><?templateDesigner expand 1?></subform
+><subform w="169.999mm" name="sNotaInformativa" layout="tb"
+><bind match="none"
+/><draw w="169.999mm" h="15.53mm" name="NotaInformativa"
+><font typeface="Myriad Pro" letterSpacing="-0.02em" baselineShift="0pt"
+/><value
+><exData contentType="text/html"
+><body xmlns="http://www.w3.org/1999/xhtml" xmlns:xfa="http://www.xfa.org/schema/xfa-data/1.0/" xfa:APIVersion="2.7.0.0"
+><p style="font-family:Arial;font-size:8pt;font-weight:bold;text-decoration:none"
+>Informació:<span style="font-weight:normal"
+> L'Admininistració podrà fer, en qualsevol moment, les comprovacions necessàries relatives al compliment de les dades declarades i tinença de la corresponent documentació. La inexactitud, falsedat o omissió de caràcter essencial de les dades declarades comportarà, amb l'audiència prèvia de la persona interessada, deixar sense efecte el tràmit corresponent des del moment en què se'n tingui coneixement, sens perjudici de les actuacions corresponents i l'exigència de les responsabilitats previstes en la legislació vigent.</span
+></p
+></body
+></exData
+></value
+><ui
+><textEdit
+/></ui
+><margin leftInset="0.5mm" rightInset="0.5mm" topInset="0.5mm" bottomInset="0.5mm"
+/><para vAlign="middle" spaceAbove="0pt" spaceBelow="0pt" textIndent="0pt" marginLeft="0pt" marginRight="0pt"
+/><border
+><edge presence="hidden"
+/><edge presence="hidden"
+/><edge thickness="1mm"
+/><edge presence="hidden"
+/><corner
+/><corner
+/><corner thickness="1mm"
+/><corner
+/></border
+><assist
+><speak
+>Informació: L'Admininistració podrà fer, en qualsevol moment, les comprovacions necessàries relatives al compliment de les dades declarades i tinença de la corresponent documentació. La inexactitud, falsedat o omissió de caràcter essencial de les dades declarades comportarà, amb l'audiència prèvia de la persona interessada, deixar sense efecte el tràmit corresponent des del moment en què se'n tingui coneixement, sens perjudici de les actuacions corresponents i l'exigència de les responsabilitats previstes en la legislació vigent.</speak
+></assist
+></draw
+><?templateDesigner expand 1?></subform
+><?templateDesigner expand 1?></subform
+><proto
+/><desc
+><text name="version"
+>15</text
+><text name="creator"
+>Generalitat de Catalunya</text
+><text name="contact"
+>Àrea d'Organització i Adm. Digital</text
+><text name="department"
+>Emrpesa i Treball</text
+><text name="description"
+>Declaració responsable per a la posada en servei, la modificació, el canvi de titular o la baixa d'una instal·lació de seguretat industrial</text
+><text name="title"
+>Declaració responsable per a la posada en servei, la modificació, el canvi de titular o la baixa d'una instal·lació de seguretat industrial</text
+><text name="issued"
+>10/2021</text
+><text name="created"
+>10/2021</text
+></desc
+><?templateDesigner Hyphenation excludeInitialCap:1, excludeAllCaps:1, wordCharCnt:7, remainCharCnt:3, pushCharCnt:3?><?templateDesigner expand 1?><?renderCache.subset "Arial" 0 0 ISO-8859-1 4 288 83 0003000A000B000C000F001000110012001300140016001700180019001A001B001C001D0023002400250026002700280029002A002C002F003000310032003300340035003600370038003B004400450046004700480049004A004B004C004D004F0050005100520053005400550056005700580059005B005C005D006A006F0070007100740079007A007E00B60101 '(),-./013456789:@ABCDEFGILMNOPQRSTUXabcdefghijlmnopqrstuvxyzàçéèíóòú’·?><?renderCache.subset "Arial" 1 0 ISO-8859-1 4 264 77 0003000A000B000C000F0010001100120013001400150016001700180019001A001B001C001D00230024002600270028002A002C002F003100320033003600370039004400450046004700480049004A004B004C004D004F0050005100520053005400550056005700580059005B005C0065006A006F0070007100740079007E00B60101 '(),-./0123456789:@ACDEGILNOPSTVabcdefghijlmnopqrstuvxyÉàçéèíóú’·?><?renderCache.subset "Arial" 0 1 ISO-8859-1 4 84 24 0003000A000B000C0044004600470048004C004F00500051005200540055005600570058007000710101 '()acdeilmnoqrstuéè·?><?renderCache.subset "Courier New" 0 0 ISO-8859-1 4 4 1 003AW?></subform
+><?templateDesigner DefaultPreviewDynamic 1?><?templateDesigner WidowOrphanControl 0?><?originalXFAVersion http://www.xfa.org/schema/xfa-template/2.6/?><?templateDesigner DefaultCaptionFontSettings face:Arial;size:10;weight:normal;style:normal?><?templateDesigner DefaultValueFontSettings face:Courier New;size:9;weight:normal;style:normal?><?templateDesigner Print-PrinterName \\di403\RICOH Aficio MP 2510 RPCS?><?templateDesigner Print-Copies 1?><?templateDesigner Print-Collate 1?><?templateDesigner Print-PageRange all?><?templateDesigner Print-ProductionPrint 0?><?templateDesigner Print-DuplexingOption simplex?><?templateDesigner SavePDFWithLog 0?><?templateDesigner Grid show:1, snap:0, units:1, color:ff99cc, origin:(0,0), interval:(79365,79365), objsnap:0, guidesnap:0, pagecentersnap:-558353286?><?templateDesigner Rulers horizontal:1, vertical:1, guidelines:1, crosshairs:0?><?templateDesigner Guidelines v:3750000;v:259860;v:53000;v:1802146;v:5000236;v:4170650;v:2879411;v:752168;h:3149615;h:1412800;h:454678;h:251576;h:1536684;h:1878068;h:3558666;h:552647;h:918235;h:1055439?><?templateDesigner FormTargetVersion 26?><?templateDesigner DefaultLanguage JavaScript?><?templateDesigner DefaultRunAt client?><?acrobat JavaScript strictScoping?><?PDFPrintOptions embedViewerPrefs 0?><?PDFPrintOptions embedPrintOnFormOpen 0?><?PDFPrintOptions scalingPrefs 0?><?PDFPrintOptions enforceScalingPrefs 0?><?PDFPrintOptions paperSource 0?><?PDFPrintOptions duplexMode 0?><?templateDesigner DefaultPreviewType interactive?><?templateDesigner DefaultPreviewPagination simplex?><?templateDesigner XDPPreviewFormat 20?><?templateDesigner Zoom 154?><?templateDesigner SaveTaggedPDF 1?><?templateDesigner SavePDFWithEmbeddedFonts 0?></template
+>

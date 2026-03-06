@@ -1,0 +1,23 @@
+{
+    "Titular": {
+        "Nom": "Nom i Cognoms",
+        "NIF": "NIF",
+        "Adreca": "Domicili social",
+        "Poblacio": "Població",
+        "CodiPostal": "CP",
+        "Email": "correu electrònic"
+    },
+    "Representant": {
+        "Nom": "I en el seu nom i representació",
+        "DNI": "DNI"
+    },
+    "Data": {
+        "Dia": "DIA",
+        "Mes": "MES",
+        "Any": "de 20",
+        "Ciutat": "CIUTAT"
+    },
+    "Empresa": {
+        "RASIC": "RASIC"
+    }
+}
