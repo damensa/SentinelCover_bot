@@ -15,6 +15,8 @@ import { dataExtractor } from './services/data-extractor';
 import { classifierService } from './services/classifier';
 
 import { dbService, UserSession } from './services/db';
+import { queueService } from './services/queue-service';
+import './worker'; // Import worker to start it in the same process
 
 const formFiller = new FormFillerService();
 
@@ -118,11 +120,7 @@ async function handleFormFlow(msg: any, state: UserSession) {
                     }
                 };
 
-                const pdfPath = await formFiller.fillELEC1PDF(formData);
-
-                const media = MessageMedia.fromFilePath(pdfPath);
-                await msg.reply(media);
-                await msg.reply('✅ Certificat generat amb èxit! He inclòs les teves dades, els detalls tècnics i la certificat de l\'instal·lador.');
+                await queueService.addPdfJob('elec1', formData, msg.from);
 
                 dbService.clearSession(msg.from);
             } catch (e: any) {
@@ -199,15 +197,10 @@ async function handleElec2FormFlow(msg: any, state: UserSession) {
     // Special check for finalization inside step 3
     if (text.toLowerCase() === 'finalitzar' || text.toLowerCase() === 'finalizar') {
         try {
-            await msg.reply('⏳ Generant l\'Esquema Unifilar ELEC-2, un moment...');
-            const pdfPath = await formFiller.fillElec2PDF({
-                general: state.data.general,
-                circuits: state.data.circuits
-            });
+            await msg.reply('⏳ *Generant Esquema Unifilar...* Estem dibuixant el plànol en segon pla. Te\'l enviaré en un moment.');
 
-            const media = MessageMedia.fromFilePath(pdfPath);
-            await msg.reply(media);
-            await msg.reply('✅ Esquema Unifilar generat amb èxit!');
+            await queueService.addPdfJob('elec2', state.data, msg.from);
+
             dbService.clearSession(msg.from);
         } catch (err: any) {
             await msg.reply(`❌ Error: ${err.message}`);
@@ -278,16 +271,10 @@ async function handleContractFormFlow(msg: any, state: UserSession) {
                 state.data.data.any = state.data.data.any || String(now.getFullYear()).substring(2);
                 state.data.data.ciutat = state.data.data.ciutat || 'Sabadell';
 
-                await msg.reply('⏳ Generant el Contracte de Manteniment BT, un moment...');
-                const pdfPath = await formFiller.fillContractPDF({
-                    titular: state.data.titular,
-                    representant: state.data.representant || { nom: '', dni: '' },
-                    data: state.data.data
-                });
+                await msg.reply('⏳ *Generant Contracte de Manteniment...* Estem processant el document en segon pla.');
 
-                const media = MessageMedia.fromFilePath(pdfPath);
-                await msg.reply(media);
-                await msg.reply('✅ Contracte de Manteniment BT generat amb èxit!');
+                await queueService.addPdfJob('contract', state.data, msg.from);
+
                 dbService.clearSession(msg.from);
             } catch (err: any) {
                 await msg.reply(`❌ Error: ${err.message}`);
@@ -349,17 +336,10 @@ async function handleDRFormFlow(msg: any, state: UserSession) {
                 const extracted = await dataExtractor.extractDRData(text, state.data);
                 state.data = { ...state.data, ...extracted };
 
-                await msg.reply('⏳ Generant la Declaració Responsable, un moment...');
-                const pdfPath = await formFiller.fillDRPDF({
-                    titular: state.data.titular,
-                    installacio: state.data.installacio || {},
-                    adreca: state.data.adreca || {},
-                    declarant: state.data.declarant || {}
-                });
+                await msg.reply('⏳ *Generant Declaració Responsable...* Estem processant el tràmit en segon pla.');
 
-                const media = MessageMedia.fromFilePath(pdfPath);
-                await msg.reply(media);
-                await msg.reply('✅ Declaració Responsable generada amb èxit!');
+                await queueService.addPdfJob('dr', state.data, msg.from);
+
                 dbService.clearSession(msg.from);
             } catch (err: any) {
                 await msg.reply(`❌ Error: ${err.message}`);
@@ -379,7 +359,7 @@ const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
 });
 
-const client = new Client({
+export const client = new Client({
     authStrategy: new LocalAuth(),
     puppeteer: {
         headless: true,
