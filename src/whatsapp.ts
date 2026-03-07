@@ -14,22 +14,15 @@ import { FormFillerService, Elec1FormData } from './services/form-filler';
 import { dataExtractor } from './services/data-extractor';
 import { classifierService } from './services/classifier';
 
+import { dbService, UserSession } from './services/db';
+
 const formFiller = new FormFillerService();
 
-// State management for form filling
-interface UserState {
-    mode: 'chat' | 'form_elec1' | 'form_dr' | 'form_contract' | 'form_elec2';
-    step: number;
-    data: any;
-}
-
-const userState: Record<string, UserState> = {};
-
-async function handleFormFlow(msg: any, state: UserState) {
+async function handleFormFlow(msg: any, state: UserSession) {
     const text = msg.body.trim();
 
     if (text.toLowerCase() === 'cancel·lar' || text.toLowerCase() === 'cancelar') {
-        delete userState[msg.from];
+        dbService.clearSession(msg.from);
         await msg.reply('❌ Procés certificat elèctric cancel·lat.');
         return;
     }
@@ -54,6 +47,7 @@ async function handleFormFlow(msg: any, state: UserState) {
                 await msg.reply('✅ Dades personals capturades.');
                 await msg.reply('⚡ *BLOC 2: DADES TÈCNIQUES*\n\nIndica\'m els detalls de la instal·lació:\n- **CUPS** (Codi de subministrament)\n- **Tipus d\'actuació** (Nova, Ampliació o Reforma)\n- **Requisits** (P1, P2 o MTD) i **Ús** (Habitatge, Local...)\n- Potència (kW), Tensió, Circuits, IGA, IGM, LGA i Terra');
                 state.step = 2;
+                dbService.saveSession(msg.from, state);
             } catch (e) {
                 await msg.reply('❌ Error processant les dades. Torna-ho a provar o escriu "cancel·lar".');
             }
@@ -72,6 +66,7 @@ async function handleFormFlow(msg: any, state: UserState) {
                 await msg.reply('✅ Dades tècniques rebudes.');
                 await msg.reply('📝 *BLOC 3: OBSERVACIONS*\n\nVols afegir alguna observació o nota important al certificat? (Escriu la teva nota o "no" per acabar)');
                 state.step = 3;
+                dbService.saveSession(msg.from, state);
             } catch (e) {
                 await msg.reply('❌ Error processant dades tècniques.');
             }
@@ -129,21 +124,21 @@ async function handleFormFlow(msg: any, state: UserState) {
                 await msg.reply(media);
                 await msg.reply('✅ Certificat generat amb èxit! He inclòs les teves dades, els detalls tècnics i la certificat de l\'instal·lador.');
 
-                delete userState[msg.from];
+                dbService.clearSession(msg.from);
             } catch (e: any) {
                 console.error(e);
                 await msg.reply(`❌ Error generant el PDF: ${e.message}`);
-                delete userState[msg.from];
+                dbService.clearSession(msg.from);
             }
             break;
     }
 }
 
-async function handleElec2FormFlow(msg: any, state: UserState) {
+async function handleElec2FormFlow(msg: any, state: UserSession) {
     const text = msg.body.trim();
 
     if (text.toLowerCase() === 'cancel·lar' || text.toLowerCase() === 'cancelar') {
-        delete userState[msg.from];
+        dbService.clearSession(msg.from);
         await msg.reply('❌ Procés "Esquema Unifilar" cancel·lat.');
         return;
     }
@@ -152,6 +147,7 @@ async function handleElec2FormFlow(msg: any, state: UserState) {
         case 0:
             await msg.reply('⚡ *ESQUEMA UNIFILAR (ELEC-2)*\n\nComencem per les **Dades Generals**. Digue\'m:\n- Empresa Distribuidora\n- Tensió (V)\n- Secció Conexió Servei\n- IGA (A) i Potència Contractada (kW)');
             state.step = 1;
+            dbService.saveSession(msg.from, state);
             break;
 
         case 1:
@@ -161,6 +157,7 @@ async function handleElec2FormFlow(msg: any, state: UserState) {
                 await msg.reply('✅ Dades d\'escomesa capturades.');
                 await msg.reply('🏠 *EMPLAÇAMENT I TITULAR*\n\nDigue\'m l\'**Adreça completa** de l\'obra i el **Nom del Titular**.');
                 state.step = 2;
+                dbService.saveSession(msg.from, state);
             } catch (e) {
                 await msg.reply('❌ Error processant dades generals.');
             }
@@ -174,6 +171,7 @@ async function handleElec2FormFlow(msg: any, state: UserState) {
                 await msg.reply('✅ Dades d\'emplaçament desades.');
                 await msg.reply('⚙️ *CIRCUITS*\n\nAnem pel primer (**Circuit C**). Digue\'m:\n- Receptor (ex: Forn, Cuina, Rentadora...)\n- Potència (kW)\n- Secció (mm²)\n- PIA (A)\n- Diferencial (A/mA)');
                 state.step = 3;
+                dbService.saveSession(msg.from, state);
             } catch (e) {
                 await msg.reply('❌ Error.');
             }
@@ -189,6 +187,7 @@ async function handleElec2FormFlow(msg: any, state: UserState) {
                 const count = state.data.circuits.length;
                 const nextLabel = String.fromCharCode(67 + count); // C is 67
 
+                dbService.saveSession(msg.from, state);
                 await msg.reply(`✅ Circuit ${String.fromCharCode(66 + count)} desat.`);
                 await msg.reply(`Digue\'m les dades del següent circuit (**${nextLabel}**) o escriu *FINALITZAR* per generar el PDF.`);
             } catch (e) {
@@ -209,19 +208,18 @@ async function handleElec2FormFlow(msg: any, state: UserState) {
             const media = MessageMedia.fromFilePath(pdfPath);
             await msg.reply(media);
             await msg.reply('✅ Esquema Unifilar generat amb èxit!');
-            delete userState[msg.from];
+            dbService.clearSession(msg.from);
         } catch (err: any) {
             await msg.reply(`❌ Error: ${err.message}`);
-            delete userState[msg.from];
+            dbService.clearSession(msg.from);
         }
     }
 }
-
-async function handleContractFormFlow(msg: any, state: UserState) {
+async function handleContractFormFlow(msg: any, state: UserSession) {
     const text = msg.body.trim();
 
     if (text.toLowerCase() === 'cancel·lar' || text.toLowerCase() === 'cancelar') {
-        delete userState[msg.from];
+        dbService.clearSession(msg.from);
         await msg.reply('❌ Procés "Contracte de Manteniment" cancel·lat.');
         return;
     }
@@ -230,6 +228,7 @@ async function handleContractFormFlow(msg: any, state: UserState) {
         case 0:
             await msg.reply('📝 *CONTRACTE MANTENIMENT: BLOC 1*\n\nEnvia\'m les dades del **Titular** (Nom, NIF, Adreça, Població, Codi Postal i Email).');
             state.step = 1;
+            dbService.saveSession(msg.from, state);
             break;
 
         case 1:
@@ -245,6 +244,7 @@ async function handleContractFormFlow(msg: any, state: UserState) {
                 await msg.reply('✅ Dades capturades.');
                 await msg.reply('👤 *BLOC 2: REPRESENTANT*\n\nSi hi ha un representant, indica el seu **Nom** i **DNI**. Si no, escriu "no".');
                 state.step = 2;
+                dbService.saveSession(msg.from, state);
             } catch (e) {
                 await msg.reply('❌ Error processant dades.');
             }
@@ -259,6 +259,7 @@ async function handleContractFormFlow(msg: any, state: UserState) {
 
                 await msg.reply('📅 *BLOC 3: DATA i LLOC*\n\nIndica la **població** i la **data** (dia, mes i any) per al contracte. Si no dius res, usaré Sabadell i la data d\'avui.');
                 state.step = 3;
+                dbService.saveSession(msg.from, state);
             } catch (e) {
                 await msg.reply('❌ Error.');
             }
@@ -287,20 +288,19 @@ async function handleContractFormFlow(msg: any, state: UserState) {
                 const media = MessageMedia.fromFilePath(pdfPath);
                 await msg.reply(media);
                 await msg.reply('✅ Contracte de Manteniment BT generat amb èxit!');
-                delete userState[msg.from];
+                dbService.clearSession(msg.from);
             } catch (err: any) {
                 await msg.reply(`❌ Error: ${err.message}`);
-                delete userState[msg.from];
+                dbService.clearSession(msg.from);
             }
             break;
     }
 }
-
-async function handleDRFormFlow(msg: any, state: UserState) {
+async function handleDRFormFlow(msg: any, state: UserSession) {
     const text = msg.body.trim();
 
     if (text.toLowerCase() === 'cancel·lar' || text.toLowerCase() === 'cancelar') {
-        delete userState[msg.from];
+        dbService.clearSession(msg.from);
         await msg.reply('❌ Procés "Declaració Responsable" cancel·lat.');
         return;
     }
@@ -309,6 +309,7 @@ async function handleDRFormFlow(msg: any, state: UserState) {
         case 0:
             await msg.reply('📝 *DECLARACIÓ RESPONSABLE: BLOC 1*\n\nEnvia\'m les dades del **Titular** (Nom i NIF) i l\'**Adreça** de la instal·lació (Carrer, Número, Població, Codi Postal, Municipi i Comarca).');
             state.step = 1;
+            dbService.saveSession(msg.from, state);
             break;
 
         case 1:
@@ -324,6 +325,7 @@ async function handleDRFormFlow(msg: any, state: UserState) {
                 await msg.reply('✅ Dades capturades.');
                 await msg.reply('⚙️ *BLOC 2: DETALLS*\n\nIndica\'m:\n- **Tipus d\'instal·lació** (ex: Grua, BT, Químics...)\n- **Camp Reglamentari** (ex: PESS de grua motoritzada)\n- **CUPS** (si en tens)');
                 state.step = 2;
+                dbService.saveSession(msg.from, state);
             } catch (e) {
                 await msg.reply('❌ Error processant dades.');
             }
@@ -336,6 +338,7 @@ async function handleDRFormFlow(msg: any, state: UserState) {
 
                 await msg.reply('👤 *BLOC 3: DECLARANT*\n\nQui fa la declaració? (Nom i NIF). Indica també si ets el **Titular** o un **Representant**.');
                 state.step = 3;
+                dbService.saveSession(msg.from, state);
             } catch (e) {
                 await msg.reply('❌ Error.');
             }
@@ -357,10 +360,10 @@ async function handleDRFormFlow(msg: any, state: UserState) {
                 const media = MessageMedia.fromFilePath(pdfPath);
                 await msg.reply(media);
                 await msg.reply('✅ Declaració Responsable generada amb èxit!');
-                delete userState[msg.from];
+                dbService.clearSession(msg.from);
             } catch (err: any) {
                 await msg.reply(`❌ Error: ${err.message}`);
-                delete userState[msg.from];
+                dbService.clearSession(msg.from);
             }
             break;
     }
@@ -369,37 +372,6 @@ async function handleDRFormFlow(msg: any, state: UserState) {
 const BRAND_HEADER = `🛡️ SENTINEL COVER | Assistent Tècnic
 Un servei de Effiguard Tech SL
 ━━━━━━━━━━━━━━━━━━`;
-
-const WELCOME_MESSAGE = `Hola! Benvingut a la beta de Sentinel Cover. Soc el teu assistent especialitzat en calderes i normativa RITE. Puc ajudar-te a diagnosticar avaries, resoldre dubtes legals o processar els teus tiquets de combustió. Comencem?`;
-
-const SEEN_CONTACTS_PATH = path.join(process.cwd(), 'seen_contacts.json');
-
-function isNewContact(number: string): boolean {
-    try {
-        if (!fs.existsSync(SEEN_CONTACTS_PATH)) {
-            fs.writeFileSync(SEEN_CONTACTS_PATH, JSON.stringify([]));
-        }
-        const seen = JSON.parse(fs.readFileSync(SEEN_CONTACTS_PATH, 'utf8'));
-        if (!seen.includes(number)) {
-            seen.push(number);
-            fs.writeFileSync(SEEN_CONTACTS_PATH, JSON.stringify(seen));
-            return true;
-        }
-        return false;
-    } catch (e) {
-        return false;
-    }
-}
-
-function getWhitelist(): string[] {
-    try {
-        const data = fs.readFileSync(path.join(process.cwd(), 'subscriptors.json'), 'utf8');
-        return JSON.parse(data).subscriptors || [];
-    } catch (error) {
-        console.error('Error carregant subscriptors.json:', error);
-        return [];
-    }
-}
 
 dotenv.config();
 
@@ -460,18 +432,18 @@ client.on('disconnected', (reason) => {
 });
 
 client.on('message', async (msg) => {
-    console.log(`[DEBUG] RECEIVED MESSAGE: "${msg.body}" from ${msg.from}`);
-    // Whitelist Check
-    const whitelist = getWhitelist();
-    const chat = await msg.getChat();
     const contact = await msg.getContact();
     const number = contact.number; // e.g., "34600000000"
+    const from = msg.from;
 
-    if (!whitelist.includes(number)) {
-        // Opcionalment podem respondre una sola vegada o simplement ignorar
-        console.log(`Accés denegat per al número: ${number}`);
+    // 1. Whitelist Check (SQLite)
+    if (!dbService.isSubscriber(number)) {
+        console.log(`[AUTH] Accés denegat per al número: ${number}`);
         return;
     }
+
+    // 2. Log Incoming Message
+    dbService.logMessage(number, msg.body, 'user');
 
     console.log(`[MSG] De: ${number} | Body: "${msg.body}" | Type: ${msg.type} | HasMedia: ${msg.hasMedia}`);
 
@@ -484,10 +456,12 @@ client.on('message', async (msg) => {
         userText = msg.body;
     }
 
-    // Trigger Welcome Message
-    if (isNewContact(number) || userText.toLowerCase().trim() === 'hola') {
-        await msg.reply(WELCOME_MESSAGE);
-        if (userText.toLowerCase().trim() === 'hola') return;
+    // Trigger Welcome Message on "hola"
+    if (userText.toLowerCase().trim() === 'hola') {
+        const welcome = "Hola! Soc en Sentinel. Puc ajudar-te amb formularis BT (ELEC1, ELEC2, DR, Contracte) o resoldre dubtes tècnics de calderes. Què necessites?";
+        await msg.reply(welcome);
+        dbService.logMessage(number, welcome, 'bot');
+        return;
     }
 
     if (isAudio) {
@@ -521,11 +495,27 @@ client.on('message', async (msg) => {
     if (!userText) return;
 
     // --- FORM FILLING LOGIC START ---
-    const from = msg.from;
 
-    // Check if we are already in a form session
-    if (userState[from] && userState[from].mode === 'form_elec1') {
-        await handleFormFlow(msg, userState[from]);
+    // Check for existing session in DB
+    const state = dbService.getSession(from);
+
+    if (state && state.mode === 'form_elec1') {
+        await handleFormFlow(msg, state);
+        return;
+    }
+
+    if (state && state.mode === 'form_dr') {
+        await handleDRFormFlow(msg, state);
+        return;
+    }
+
+    if (state && state.mode === 'form_contract') {
+        await handleContractFormFlow(msg, state);
+        return;
+    }
+
+    if (state && state.mode === 'form_elec2') {
+        await handleElec2FormFlow(msg, state);
         return;
     }
 
@@ -534,44 +524,33 @@ client.on('message', async (msg) => {
     console.log(`[DEBUG] Classification: intent=${classification.intent}, formId=${classification.formId}`);
 
     if (classification.intent === 'form_filling' && classification.formId === 'elec1') {
-        userState[from] = { mode: 'form_elec1', step: 0, data: {} };
-        await handleFormFlow(msg, userState[from]);
+        const newState: UserSession = { mode: 'form_elec1', step: 0, data: {} };
+        dbService.saveSession(from, newState);
+        await handleFormFlow(msg, newState);
         return;
     }
 
     if (classification.intent === 'form_filling' && classification.formId === 'dr_installacio') {
-        userState[from] = { mode: 'form_dr', step: 0, data: {} };
-        await handleDRFormFlow(msg, userState[from]);
+        const newState: UserSession = { mode: 'form_dr', step: 0, data: {} };
+        dbService.saveSession(from, newState);
+        await handleDRFormFlow(msg, newState);
         return;
     }
 
     if (classification.intent === 'form_filling' && classification.formId === 'contracte_bt') {
-        userState[from] = { mode: 'form_contract', step: 0, data: {} };
-        await handleContractFormFlow(msg, userState[from]);
+        const newState: UserSession = { mode: 'form_contract', step: 0, data: {} };
+        dbService.saveSession(from, newState);
+        await handleContractFormFlow(msg, newState);
         return;
     }
 
     if (classification.intent === 'form_filling' && classification.formId === 'elec2_unifilar') {
-        userState[from] = { mode: 'form_elec2', step: 0, data: {} };
-        await handleElec2FormFlow(msg, userState[from]);
+        const newState: UserSession = { mode: 'form_elec2', step: 0, data: {} };
+        dbService.saveSession(from, newState);
+        await handleElec2FormFlow(msg, newState);
         return;
     }
 
-    // Existing form session routing
-    if (userState[from] && userState[from].mode === 'form_dr') {
-        await handleDRFormFlow(msg, userState[from]);
-        return;
-    }
-
-    if (userState[from] && userState[from].mode === 'form_contract') {
-        await handleContractFormFlow(msg, userState[from]);
-        return;
-    }
-
-    if (userState[from] && userState[from].mode === 'form_elec2') {
-        await handleElec2FormFlow(msg, userState[from]);
-        return;
-    }
     // --- FORM FILLING LOGIC END ---
 
     try {
@@ -903,8 +882,11 @@ client.on('message', async (msg) => {
         try {
             if (brandedResponse) {
                 await msg.reply(brandedResponse);
+                dbService.logMessage(number, brandedResponse, 'bot');
             } else {
-                await msg.reply(aiResponse || "Ho sento, no he pogut generar una resposta.");
+                const fallback = aiResponse || "Ho sento, no he pogut generar una resposta.";
+                await msg.reply(fallback);
+                dbService.logMessage(number, fallback, 'bot');
             }
         } catch (sendError: any) {
             console.error('❌ Error enviant resposta WhatsApp:', sendError);
