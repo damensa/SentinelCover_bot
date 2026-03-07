@@ -382,7 +382,8 @@ const openai = new OpenAI({
 const client = new Client({
     authStrategy: new LocalAuth(),
     puppeteer: {
-        headless: true, // Force headless
+        headless: true,
+        executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined,
         args: [
             '--no-sandbox',
             '--disable-setuid-sandbox',
@@ -394,7 +395,7 @@ const client = new Client({
             '--disable-extensions'
         ],
     },
-    authTimeoutMs: 60000, // 60 seconds timeout
+    authTimeoutMs: 60000,
     qrMaxRetries: 10,
     restartOnAuthFail: true,
 });

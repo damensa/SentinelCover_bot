@@ -1,0 +1,19 @@
+services:
+  sentinel-bot:
+    build: .
+    container_name: sentinel-bot
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      # Persistent SQLite Database
+      - ./sentinel.db:/usr/src/app/sentinel.db
+      # Persistent WhatsApp Session
+      - ./.wwebjs_auth:/usr/src/app/.wwebjs_auth
+      # Persistent Seen Contacts (if still used)
+      - ./seen_contacts.json:/usr/src/app/seen_contacts.json
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10mb"
+        max-file: "3"
