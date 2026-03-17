@@ -1,3 +1,10 @@
+console.log('[DEBUG] whatsapp.ts entry point');
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('[CRITICAL] Unhandled Rejection at:', promise, 'reason:', reason);
+});
+process.on('uncaughtException', (err) => {
+    console.error('[CRITICAL] Uncaught Exception:', err);
+});
 import pkg from 'whatsapp-web.js';
 const { Client, LocalAuth, MessageMedia } = pkg;
 const qrcode = require('qrcode-terminal');
@@ -10,29 +17,33 @@ import dotenv from 'dotenv';
 import fs from 'fs';
 import path from 'path';
 import { extractBrandAndModel, findManualFile, getManualText, validateErrorCode, validateBrandModelWithCatalog, getCanonicalBrand, getCanonicalModel, getSmartContext, getKeywordContext } from './manual-retriever';
-import { FormFillerService, Elec1FormData } from './services/form-filler';
+import { FormFillerService, Elec1FormData, ContractFormData } from './services/form-filler';
 import { dataExtractor } from './services/data-extractor';
 import { classifierService } from './services/classifier';
 
 import { dbService, UserSession } from './services/db';
-import { queueService } from './services/queue-service';
-import './worker'; // Import worker to start it in the same process
+// import { queueService } from './services/queue-service';
+import { t } from './services/i18n';
+// import './worker'; // Import worker to start it in the same process
 
 const formFiller = new FormFillerService();
+let readyTimestamp: number | null = null;
 
-async function handleFormFlow(msg: any, state: UserSession) {
+async function handleFormFlow(msg: any, state: UserSession, whatsappId: string, region: string = 'catalunya') {
     const text = msg.body.trim();
+    const lang = state.language || 'ca';
 
     if (text.toLowerCase() === 'cancel·lar' || text.toLowerCase() === 'cancelar') {
-        dbService.clearSession(msg.from);
-        await msg.reply('❌ Procés certificat elèctric cancel·lat.');
+        dbService.clearSession(whatsappId);
+        await msg.reply(t(lang, 'cancel_success'));
         return;
     }
 
     switch (state.step) {
         case 0: // Waiting for Personal Data Block
-            await msg.reply('📝 *BLOC 1: DADES PERSONALS*\n\nSi us plau, envia\'m les dades del **Titular** i l\'**Adreça** de la instal·lació (Nom complet, NIF/NIE, Carrer, Número, Codi Postal i Població) en un sol missatge.');
+            await msg.reply(t(lang, 'bloc1_prompt'));
             state.step = 1;
+            dbService.saveSession(whatsappId, state);
             break;
 
         case 1: // Processing Personal Data Block
@@ -42,65 +53,118 @@ async function handleFormFlow(msg: any, state: UserSession) {
 
                 // Minimal validation for block 1
                 if (!state.data.titular?.nomCognoms || !state.data.adreca?.codiPostal) {
-                    await msg.reply('⚠️ Sembla que falten algunes dades importants (Nom o Codi Postal). Me les pots tornar a passar o completar-les?');
+                    await msg.reply(t(lang, 'bloc1_missing'));
                     return;
                 }
 
-                await msg.reply('✅ Dades personals capturades.');
-                await msg.reply('⚡ *BLOC 2: DADES TÈCNIQUES*\n\nIndica\'m els detalls de la instal·lació:\n- **CUPS** (Codi de subministrament)\n- **Tipus d\'actuació** (Nova, Ampliació o Reforma)\n- **Requisits** (P1, P2 o MTD) i **Ús** (Habitatge, Local...)\n- Potència (kW), Tensió, Circuits, IGA, IGM, LGA i Terra');
+                await msg.reply(t(lang, 'bloc1_captured'));
+                await msg.reply(t(lang, 'bloc2_1_prompt'));
                 state.step = 2;
-                dbService.saveSession(msg.from, state);
+                dbService.saveSession(whatsappId, state);
             } catch (e) {
-                await msg.reply('❌ Error processant les dades. Torna-ho a provar o escriu "cancel·lar".');
+                await msg.reply(t(lang, 'bloc1_missing'));
             }
             break;
 
-        case 2: // Processing Technical Data Block
+        case 2: // Processing Bloc 2.1 (Adreça Instal·lació)
+            try {
+                const extracted = await dataExtractor.extractElec1Data(text, state.data);
+                state.data = { ...state.data, ...extracted };
+                await msg.reply(t(lang, 'bloc2_1_captured'));
+                await msg.reply(t(lang, 'bloc2_2_prompt'));
+                state.step = 3;
+                dbService.saveSession(whatsappId, state);
+            } catch (e) {
+                await msg.reply(t(lang, 'pdf_error'));
+            }
+            break;
+
+        case 3: // Processing Bloc 2.2 (Característiques)
+            try {
+                const extracted = await dataExtractor.extractElec1Data(text, state.data);
+                state.data = { ...state.data, ...extracted };
+                await msg.reply(t(lang, 'bloc2_2_captured'));
+                await msg.reply(t(lang, 'bloc2_3_prompt'));
+                state.step = 4;
+                dbService.saveSession(whatsappId, state);
+            } catch (e) {
+                await msg.reply(t(lang, 'pdf_error'));
+            }
+            break;
+
+        case 4: // Processing Bloc 2.3 (Classificació)
+            try {
+                const extracted = await dataExtractor.extractElec1Data(text, state.data);
+                state.data = { ...state.data, ...extracted };
+                await msg.reply(t(lang, 'bloc2_3_captured'));
+                await msg.reply(t(lang, 'bloc2_4_prompt'));
+                state.step = 5;
+                dbService.saveSession(whatsappId, state);
+            } catch (e) {
+                await msg.reply(t(lang, 'pdf_error'));
+            }
+            break;
+
+        case 5: // Processing Bloc 2.4 (Dades Tècniques)
             try {
                 const extracted = await dataExtractor.extractElec1Data(text, state.data);
                 state.data = { ...state.data, ...extracted };
 
-                if (!state.data.caracteristiques?.potenciaMax && !state.data.caracteristiques?.cups) {
-                    await msg.reply('⚠️ Em falten dades per poder continuar (Potència o CUPS).');
+                if (!state.data.caracteristiques?.potenciaMax) {
+                    await msg.reply('⚠️ Em falten dades tècniques importants (Potència Màxima). Me les pots completar?');
                     return;
                 }
 
-                await msg.reply('✅ Dades tècniques rebudes.');
-                await msg.reply('📝 *BLOC 3: OBSERVACIONS*\n\nVols afegir alguna observació o nota important al certificat? (Escriu la teva nota o "no" per acabar)');
-                state.step = 3;
-                dbService.saveSession(msg.from, state);
+                await msg.reply(t(lang, 'bloc2_4_captured'));
+                await msg.reply(t(lang, 'bloc3_prompt'));
+                state.step = 6;
+                dbService.saveSession(whatsappId, state);
             } catch (e) {
-                await msg.reply('❌ Error processant dades tècniques.');
+                await msg.reply(t(lang, 'pdf_error'));
             }
             break;
 
-        case 3: // Processing Observations & Generating PDF
+        case 6: // Processing Observations & Generating PDF
             try {
                 if (text.toLowerCase() !== 'no') {
                     const extracted = await dataExtractor.extractElec1Data(text, state.data);
                     state.data = { ...state.data, ...extracted };
                 }
 
-                await msg.reply('⏳ Generant el certificat final amb el teu perfil d\'instal·lador, un moment...');
+                await msg.reply(t(lang, 'generating_pdf'));
 
                 const formData: Elec1FormData = {
                     titular: {
                         nomCognoms: state.data.titular?.nomCognoms || '',
-                        nif: state.data.titular?.nif || ''
+                        nif: state.data.titular?.nif || '',
+                        tel: state.data.titular?.tel || '',
+                        correu: state.data.titular?.correu || ''
                     },
                     adreca: {
+                        tipusVia: state.data.adreca?.tipusVia || '',
                         nomVia: state.data.adreca?.nomVia || '',
                         numero: state.data.adreca?.numero || '',
+                        bloc: state.data.adreca?.bloc || '',
+                        escala: state.data.adreca?.escala || '',
                         codiPostal: state.data.adreca?.codiPostal || '',
                         poblacio: state.data.adreca?.poblacio || 'Sabadell',
                         pis: state.data.adreca?.pis || '',
-                        porta: state.data.adreca?.porta || ''
+                        porta: state.data.adreca?.porta || '',
+                        tel: state.data.adreca?.tel || '',
+                        correu: state.data.adreca?.correu || ''
                     },
                     installacio: {
+                        tipusVia: state.data.installacio?.tipusVia || state.data.adreca?.tipusVia || '',
                         nomVia: state.data.installacio?.nomVia || state.data.adreca?.nomVia || '',
                         numero: state.data.installacio?.numero || state.data.adreca?.numero || '',
+                        bloc: state.data.installacio?.bloc || state.data.adreca?.bloc || '',
+                        escala: state.data.installacio?.escala || state.data.adreca?.escala || '',
+                        pis: state.data.installacio?.pis || state.data.adreca?.pis || '',
+                        porta: state.data.installacio?.porta || state.data.adreca?.porta || '',
                         codiPostal: state.data.installacio?.codiPostal || state.data.adreca?.codiPostal || '',
-                        poblacio: state.data.installacio?.poblacio || state.data.adreca?.poblacio || 'Sabadell'
+                        poblacio: state.data.installacio?.poblacio || state.data.adreca?.poblacio || 'Sabadell',
+                        tel: state.data.installacio?.tel || state.data.adreca?.tel || '',
+                        correu: state.data.installacio?.correu || state.data.adreca?.correu || ''
                     },
                     caracteristiques: {
                         potenciaMax: state.data.caracteristiques?.potenciaMax || '5.75',
@@ -109,6 +173,7 @@ async function handleFormFlow(msg: any, state: UserSession) {
                         iga: state.data.caracteristiques?.iga || '25A',
                         resistenciaAillament: state.data.caracteristiques?.resistenciaAillament || '100',
                         resistenciaTerra: state.data.caracteristiques?.resistenciaTerra || '15',
+                        aillamentTerra: state.data.caracteristiques?.aillamentTerra || '100',
                         calibreCGP: state.data.caracteristiques?.calibreCGP || '',
                         igm: state.data.caracteristiques?.igm || '',
                         lga: state.data.caracteristiques?.lga || '',
@@ -116,46 +181,56 @@ async function handleFormFlow(msg: any, state: UserSession) {
                         cups: state.data.caracteristiques?.cups || '',
                         tipusActuacio: state.data.caracteristiques?.tipusActuacio || 'Nova',
                         requisits: state.data.caracteristiques?.requisits || 'P1',
-                        us: state.data.caracteristiques?.us || 'Habitatge'
+                        us: state.data.caracteristiques?.us || 'Habitatge',
+                        materialConductor: state.data.caracteristiques?.materialConductor || 'Coure',
+                        ubicacioComptadors: state.data.caracteristiques?.ubicacioComptadors || 'Sala',
+                        tipusConnexio: state.data.caracteristiques?.tipusConnexio || 'Interconnectada',
+                        subministramentComplementari: state.data.caracteristiques?.subministramentComplementari || 'No'
                     }
                 };
 
-                await queueService.addPdfJob('elec1', formData, msg.from);
+                const pdfPath = await formFiller.fillELEC1PDF(formData, region);
 
-                dbService.clearSession(msg.from);
+                if (fs.existsSync(pdfPath)) {
+                    const media = MessageMedia.fromFilePath(pdfPath);
+                    await client.sendMessage(msg.from, media, { caption: "✅ Aquí tens el teu certificat ELEC1 generat." });
+                }
+
+                dbService.clearSession(whatsappId);
             } catch (e: any) {
                 console.error(e);
                 await msg.reply(`❌ Error generant el PDF: ${e.message}`);
-                dbService.clearSession(msg.from);
+                dbService.clearSession(whatsappId);
             }
             break;
     }
 }
 
-async function handleElec2FormFlow(msg: any, state: UserSession) {
+async function handleElec2FormFlow(msg: any, state: UserSession, whatsappId: string, region: string = 'catalunya') {
     const text = msg.body.trim();
+    const lang = state.language || 'ca';
 
     if (text.toLowerCase() === 'cancel·lar' || text.toLowerCase() === 'cancelar') {
-        dbService.clearSession(msg.from);
-        await msg.reply('❌ Procés "Esquema Unifilar" cancel·lat.');
+        dbService.clearSession(whatsappId);
+        await msg.reply(t(lang, 'cancel_elec2'));
         return;
     }
 
     switch (state.step) {
         case 0:
-            await msg.reply('⚡ *ESQUEMA UNIFILAR (ELEC-2)*\n\nComencem per les **Dades Generals**. Digue\'m:\n- Empresa Distribuidora\n- Tensió (V)\n- Secció Conexió Servei\n- IGA (A) i Potència Contractada (kW)');
+            await msg.reply(t(lang, 'elec2_prompt_gen'));
             state.step = 1;
-            dbService.saveSession(msg.from, state);
+            dbService.saveSession(whatsappId, state);
             break;
 
         case 1:
             try {
                 const extracted = await dataExtractor.extractElec2Data(text, state.data);
                 state.data.general = { ...state.data.general, ...extracted.general };
-                await msg.reply('✅ Dades d\'escomesa capturades.');
-                await msg.reply('🏠 *EMPLAÇAMENT I TITULAR*\n\nDigue\'m l\'**Adreça completa** de l\'obra i el **Nom del Titular**.');
+                await msg.reply(t(lang, 'elec2_gen_captured'));
+                await msg.reply(t(lang, 'elec2_prompt_owner'));
                 state.step = 2;
-                dbService.saveSession(msg.from, state);
+                dbService.saveSession(whatsappId, state);
             } catch (e) {
                 await msg.reply('❌ Error processant dades generals.');
             }
@@ -166,10 +241,10 @@ async function handleElec2FormFlow(msg: any, state: UserSession) {
                 const extracted = await dataExtractor.extractElec2Data(text, state.data);
                 state.data.general = { ...state.data.general, ...extracted.general };
                 state.data.circuits = [];
-                await msg.reply('✅ Dades d\'emplaçament desades.');
-                await msg.reply('⚙️ *CIRCUITS*\n\nAnem pel primer (**Circuit C**). Digue\'m:\n- Receptor (ex: Forn, Cuina, Rentadora...)\n- Potència (kW)\n- Secció (mm²)\n- PIA (A)\n- Diferencial (A/mA)');
+                await msg.reply(t(lang, 'elec2_owner_captured'));
+                await msg.reply(t(lang, 'elec2_prompt_circuits'));
                 state.step = 3;
-                dbService.saveSession(msg.from, state);
+                dbService.saveSession(whatsappId, state);
             } catch (e) {
                 await msg.reply('❌ Error.');
             }
@@ -185,9 +260,9 @@ async function handleElec2FormFlow(msg: any, state: UserSession) {
                 const count = state.data.circuits.length;
                 const nextLabel = String.fromCharCode(67 + count); // C is 67
 
-                dbService.saveSession(msg.from, state);
-                await msg.reply(`✅ Circuit ${String.fromCharCode(66 + count)} desat.`);
-                await msg.reply(`Digue\'m les dades del següent circuit (**${nextLabel}**) o escriu *FINALITZAR* per generar el PDF.`);
+                dbService.saveSession(whatsappId, state);
+                await msg.reply(`${t(lang, 'elec2_circuit_saved')} (Circuits: ${count})`);
+                await msg.reply(t(lang, 'elec2_prompt_next'));
             } catch (e) {
                 await msg.reply('❌ Error en el circuit.');
             }
@@ -197,31 +272,35 @@ async function handleElec2FormFlow(msg: any, state: UserSession) {
     // Special check for finalization inside step 3
     if (text.toLowerCase() === 'finalitzar' || text.toLowerCase() === 'finalizar') {
         try {
-            await msg.reply('⏳ *Generant Esquema Unifilar...* Estem dibuixant el plànol en segon pla. Te\'l enviaré en un moment.');
+            await msg.reply(t(lang, 'generating_elec2'));
 
-            await queueService.addPdfJob('elec2', state.data, msg.from);
-
-            dbService.clearSession(msg.from);
+            const pdfPath = await formFiller.fillElec2PDF(state.data);
+            if (fs.existsSync(pdfPath)) {
+                const media = MessageMedia.fromFilePath(pdfPath);
+                await client.sendMessage(msg.from, media, { caption: "✅ Aquí tens el teu esquema unifilar ELEC2 generat." });
+            }
+            dbService.clearSession(whatsappId);
         } catch (err: any) {
             await msg.reply(`❌ Error: ${err.message}`);
-            dbService.clearSession(msg.from);
+            dbService.clearSession(whatsappId);
         }
     }
 }
-async function handleContractFormFlow(msg: any, state: UserSession) {
+async function handleContractFormFlow(msg: any, state: UserSession, whatsappId: string, region: string = 'catalunya') {
     const text = msg.body.trim();
+    const lang = state.language || 'ca';
 
     if (text.toLowerCase() === 'cancel·lar' || text.toLowerCase() === 'cancelar') {
-        dbService.clearSession(msg.from);
-        await msg.reply('❌ Procés "Contracte de Manteniment" cancel·lat.');
+        dbService.clearSession(whatsappId);
+        await msg.reply(t(lang, 'cancel_contract'));
         return;
     }
 
     switch (state.step) {
         case 0:
-            await msg.reply('📝 *CONTRACTE MANTENIMENT: BLOC 1*\n\nEnvia\'m les dades del **Titular** (Nom, NIF, Adreça, Població, Codi Postal i Email).');
+            await msg.reply(t(lang, 'contract_prompt1'));
             state.step = 1;
-            dbService.saveSession(msg.from, state);
+            dbService.saveSession(whatsappId, state);
             break;
 
         case 1:
@@ -234,10 +313,10 @@ async function handleContractFormFlow(msg: any, state: UserSession) {
                     return;
                 }
 
-                await msg.reply('✅ Dades capturades.');
-                await msg.reply('👤 *BLOC 2: REPRESENTANT*\n\nSi hi ha un representant, indica el seu **Nom** i **DNI**. Si no, escriu "no".');
+                await msg.reply(t(lang, 'bloc1_captured'));
+                await msg.reply(t(lang, 'contract_prompt2'));
                 state.step = 2;
-                dbService.saveSession(msg.from, state);
+                dbService.saveSession(whatsappId, state);
             } catch (e) {
                 await msg.reply('❌ Error processant dades.');
             }
@@ -250,9 +329,9 @@ async function handleContractFormFlow(msg: any, state: UserSession) {
                     state.data = { ...state.data, ...extracted };
                 }
 
-                await msg.reply('📅 *BLOC 3: DATA i LLOC*\n\nIndica la **població** i la **data** (dia, mes i any) per al contracte. Si no dius res, usaré Sabadell i la data d\'avui.');
+                await msg.reply(t(lang, 'contract_prompt3'));
                 state.step = 3;
-                dbService.saveSession(msg.from, state);
+                dbService.saveSession(whatsappId, state);
             } catch (e) {
                 await msg.reply('❌ Error.');
             }
@@ -263,6 +342,26 @@ async function handleContractFormFlow(msg: any, state: UserSession) {
                 const extracted = await dataExtractor.extractContractData(text, state.data);
                 state.data = { ...state.data, ...extracted };
 
+                if (!state.data.installacio?.us && !state.data.installacio?.potenciaMax) {
+                    await msg.reply('⚠️ Falten dades de la instal·lació (Ús o Potència). Me les pots completar?');
+                    return;
+                }
+
+                await msg.reply(t(lang, 'contract_prompt4'));
+                state.step = 4;
+                dbService.saveSession(whatsappId, state);
+            } catch (e) {
+                await msg.reply('❌ Error.');
+            }
+            break;
+
+        case 4:
+            try {
+                if (text.toLowerCase() !== 'no') {
+                    const extracted = await dataExtractor.extractContractData(text, state.data);
+                    state.data = { ...state.data, ...extracted };
+                }
+
                 // Default date logic
                 const now = new Date();
                 if (!state.data.data) state.data.data = {};
@@ -271,32 +370,72 @@ async function handleContractFormFlow(msg: any, state: UserSession) {
                 state.data.data.any = state.data.data.any || String(now.getFullYear()).substring(2);
                 state.data.data.ciutat = state.data.data.ciutat || 'Sabadell';
 
-                await msg.reply('⏳ *Generant Contracte de Manteniment...* Estem processant el document en segon pla.');
+                await msg.reply(t(lang, 'generating_contract'));
 
-                await queueService.addPdfJob('contract', state.data, msg.from);
+                const formData: ContractFormData = {
+                    titular: {
+                        nom: state.data.titular?.nom || '',
+                        nif: state.data.titular?.nif || '',
+                        correu: state.data.titular?.correu || '',
+                        adreca: state.data.titular?.adreca || '',
+                        poblacio: state.data.titular?.poblacio || '',
+                        codiPostal: state.data.titular?.codiPostal || '',
+                        tel: state.data.titular?.tel || '',
+                    },
+                    representant: {
+                        nom: state.data.representant?.nom || '',
+                        dni: state.data.representant?.dni || '',
+                    },
+                    installacio: {
+                        adreca: state.data.installacio?.adreca || state.data.titular?.adreca || '',
+                        poblacio: state.data.installacio?.poblacio || state.data.titular?.poblacio || '',
+                        us: state.data.installacio?.us || '',
+                        potenciaMax: state.data.installacio?.potenciaMax || '',
+                        superficie: state.data.installacio?.superficie || '',
+                        potenciaInstallada: state.data.installacio?.potenciaInstallada || '',
+                        tensio: state.data.installacio?.tensio || '',
+                        potenciaContractada: state.data.installacio?.potenciaContractada || '',
+                        numExpedientBT: state.data.installacio?.numExpedientBT || '',
+                        empresaComercialitzadora: state.data.installacio?.empresaComercialitzadora || '',
+                        aportaDoc: state.data.installacio?.aportaDoc || 'Sí',
+                        altresDades: state.data.installacio?.altresDades || '',
+                    },
+                    data: {
+                        dia: state.data.data.dia,
+                        mes: state.data.data.mes,
+                        any: state.data.data.any,
+                        ciutat: state.data.data.ciutat,
+                    }
+                };
 
-                dbService.clearSession(msg.from);
+                const pdfPath = await formFiller.fillContractPDF(formData, region);
+                if (fs.existsSync(pdfPath)) {
+                    const media = MessageMedia.fromFilePath(pdfPath);
+                    await client.sendMessage(msg.from, media, { caption: "✅ Aquí tens el teu Contracte de Manteniment generat." });
+                }
+                dbService.clearSession(whatsappId);
             } catch (err: any) {
                 await msg.reply(`❌ Error: ${err.message}`);
-                dbService.clearSession(msg.from);
+                dbService.clearSession(whatsappId);
             }
             break;
     }
 }
-async function handleDRFormFlow(msg: any, state: UserSession) {
+async function handleDRFormFlow(msg: any, state: UserSession, whatsappId: string, region: string = 'catalunya') {
     const text = msg.body.trim();
+    const lang = state.language || 'ca';
 
     if (text.toLowerCase() === 'cancel·lar' || text.toLowerCase() === 'cancelar') {
-        dbService.clearSession(msg.from);
-        await msg.reply('❌ Procés "Declaració Responsable" cancel·lat.');
+        dbService.clearSession(whatsappId);
+        await msg.reply(t(lang, 'cancel_dr'));
         return;
     }
 
     switch (state.step) {
         case 0:
-            await msg.reply('📝 *DECLARACIÓ RESPONSABLE: BLOC 1*\n\nEnvia\'m les dades del **Titular** (Nom i NIF) i l\'**Adreça** de la instal·lació (Carrer, Número, Població, Codi Postal, Municipi i Comarca).');
+            await msg.reply(t(lang, 'dr_prompt1'));
             state.step = 1;
-            dbService.saveSession(msg.from, state);
+            dbService.saveSession(whatsappId, state);
             break;
 
         case 1:
@@ -309,10 +448,10 @@ async function handleDRFormFlow(msg: any, state: UserSession) {
                     return;
                 }
 
-                await msg.reply('✅ Dades capturades.');
-                await msg.reply('⚙️ *BLOC 2: DETALLS*\n\nIndica\'m:\n- **Tipus d\'instal·lació** (ex: Grua, BT, Químics...)\n- **Camp Reglamentari** (ex: PESS de grua motoritzada)\n- **CUPS** (si en tens)');
+                await msg.reply(t(lang, 'bloc1_captured'));
+                await msg.reply(t(lang, 'dr_prompt2'));
                 state.step = 2;
-                dbService.saveSession(msg.from, state);
+                dbService.saveSession(whatsappId, state);
             } catch (e) {
                 await msg.reply('❌ Error processant dades.');
             }
@@ -323,9 +462,9 @@ async function handleDRFormFlow(msg: any, state: UserSession) {
                 const extracted = await dataExtractor.extractDRData(text, state.data);
                 state.data = { ...state.data, ...extracted };
 
-                await msg.reply('👤 *BLOC 3: DECLARANT*\n\nQui fa la declaració? (Nom i NIF). Indica també si ets el **Titular** o un **Representant**.');
+                await msg.reply(t(lang, 'dr_prompt3'));
                 state.step = 3;
-                dbService.saveSession(msg.from, state);
+                dbService.saveSession(whatsappId, state);
             } catch (e) {
                 await msg.reply('❌ Error.');
             }
@@ -336,18 +475,209 @@ async function handleDRFormFlow(msg: any, state: UserSession) {
                 const extracted = await dataExtractor.extractDRData(text, state.data);
                 state.data = { ...state.data, ...extracted };
 
-                await msg.reply('⏳ *Generant Declaració Responsable...* Estem processant el tràmit en segon pla.');
+                await msg.reply(t(lang, 'generating_dr'));
 
-                await queueService.addPdfJob('dr', state.data, msg.from);
-
-                dbService.clearSession(msg.from);
+                const pdfPath = await formFiller.fillDRPDF(state.data, region);
+                if (fs.existsSync(pdfPath)) {
+                    const media = MessageMedia.fromFilePath(pdfPath);
+                    await client.sendMessage(msg.from, media, { caption: "✅ Aquí tens la teva Declaració Responsable generada." });
+                }
+                dbService.clearSession(whatsappId);
             } catch (err: any) {
                 await msg.reply(`❌ Error: ${err.message}`);
-                dbService.clearSession(msg.from);
+                dbService.clearSession(whatsappId);
             }
             break;
     }
 }
+
+async function handleElec3FormFlow(msg: any, state: UserSession, whatsappId: string, region: string = 'catalunya') {
+    const text = msg.body.trim();
+    const lang = state.language || 'ca';
+
+    if (text.toLowerCase() === 'cancel·lar' || text.toLowerCase() === 'cancelar') {
+        dbService.clearSession(whatsappId);
+        await msg.reply(t(lang, 'cancel_elec3'));
+        return;
+    }
+
+    switch (state.step) {
+        case 0:
+            await msg.reply(t(lang, 'elec3_prompt_gen'));
+            state.step = 1;
+            dbService.saveSession(whatsappId, state);
+            break;
+
+        case 1:
+            try {
+                const extracted = await dataExtractor.extractElec3Data(text, state.data);
+                state.data = { ...state.data, ...extracted };
+
+                if (!state.data.general?.titular || !state.data.general?.us) {
+                    await msg.reply('⚠️ Falten dades generals (Titular o Ús). Me les pots completar?');
+                    return;
+                }
+
+                await msg.reply(t(lang, 'elec3_gen_captured'));
+                await msg.reply(t(lang, 'elec3_prompt_escomesa'));
+                state.step = 2;
+                dbService.saveSession(whatsappId, state);
+            } catch (e) {
+                await msg.reply('❌ Error processant dades.');
+            }
+            break;
+
+        case 2:
+            try {
+                const extracted = await dataExtractor.extractElec3Data(text, state.data);
+                state.data = { ...state.data, ...extracted };
+
+                await msg.reply(t(lang, 'elec3_escomesa_captured'));
+                await msg.reply(t(lang, 'elec3_prompt_circuits'));
+                state.step = 3;
+                if (!state.data.circuits) state.data.circuits = [];
+                dbService.saveSession(whatsappId, state);
+            } catch (e) {
+                await msg.reply('❌ Error.');
+            }
+            break;
+
+        case 3:
+            if (text.toLowerCase() === 'fi' || text.toLowerCase() === 'fin') {
+                try {
+                    await msg.reply(t(lang, 'generating_elec3'));
+
+                    // Formatejar la data actual automàticament
+                    if (!state.data.general) state.data.general = {};
+                    const now = new Date();
+                    state.data.general.data = `${now.getDate()} de ${now.toLocaleString('ca-ES', { month: 'long' })} de ${now.getFullYear()}`;
+
+                    const docxPath = await formFiller.fillElec3Docx(state.data as any, region);
+                    if (fs.existsSync(docxPath)) {
+                        const media = MessageMedia.fromFilePath(docxPath);
+                        await client.sendMessage(msg.from, media, { caption: "✅ Aquí tens la teva Memòria Tècnica ELEC-3 generada." });
+                    }
+                    dbService.clearSession(whatsappId);
+                } catch (err: any) {
+                    await msg.reply(`❌ Error: ${err.message}`);
+                    dbService.clearSession(whatsappId);
+                }
+            } else {
+                try {
+                    const extracted = await dataExtractor.extractElec3Data(text, state.data);
+                    let recognized = false;
+
+                    if (extracted.circuit && Object.keys(extracted.circuit).length > 0) {
+                        state.data.circuits.push(extracted.circuit);
+                        await msg.reply('✅ Circuit desat.');
+                        recognized = true;
+                    }
+                    if (extracted.diferencial && Object.keys(extracted.diferencial).length > 0) {
+                        if (!state.data.diferencials) state.data.diferencials = [];
+                        state.data.diferencials.push(extracted.diferencial);
+                        await msg.reply('✅ Diferencial desat.');
+                        recognized = true;
+                    }
+
+                    if (recognized) {
+                        await msg.reply(t(lang, 'elec3_prompt_next'));
+                        dbService.saveSession(whatsappId, state);
+                    } else {
+                        await msg.reply('⚠️ No he entès bé les dades. Torna-ho a intentar o escriu FI per acabar.');
+                    }
+                } catch (e) {
+                    await msg.reply('❌ Error processant les dades.');
+                }
+            }
+            break;
+    }
+}
+
+async function handleDictamenFormFlow(msg: any, state: UserSession, whatsappId: string, region: string = 'catalunya') {
+    const text = msg.body.trim();
+    const lang = state.language || 'ca';
+
+    if (text.toLowerCase() === 'cancel·lar' || text.toLowerCase() === 'cancelar') {
+        dbService.clearSession(whatsappId);
+        await msg.reply(t(lang, 'cancel_dictamen'));
+        return;
+    }
+
+    switch (state.step) {
+        case 0:
+            await msg.reply(t(lang, 'dictamen_prompt1'));
+            state.step = 1;
+            dbService.saveSession(whatsappId, state);
+            break;
+
+        case 1:
+            try {
+                const extracted = await dataExtractor.extractDictamenData(text, state.data);
+                state.data = { ...state.data, ...extracted };
+
+                if (!state.data.general?.titular || !state.data.general?.emplaçament) {
+                    await msg.reply('⚠️ Falten dades generals (Titular o Adreça). Me les pots completar?');
+                    return;
+                }
+
+                await msg.reply(t(lang, 'dictamen_prompt1_captured'));
+                await msg.reply(t(lang, 'dictamen_prompt2'));
+                state.step = 2;
+                dbService.saveSession(whatsappId, state);
+            } catch (e) {
+                await msg.reply('❌ Error processant dades.');
+            }
+            break;
+
+        case 2:
+            try {
+                const extracted = await dataExtractor.extractDictamenData(text, state.data);
+                state.data = { ...state.data, ...extracted };
+
+                await msg.reply(t(lang, 'dictamen_prompt2_captured'));
+                await msg.reply(t(lang, 'dictamen_prompt3'));
+                state.step = 3;
+                if (!state.data.anomalies) state.data.anomalies = [];
+                dbService.saveSession(whatsappId, state);
+            } catch (e) {
+                await msg.reply('❌ Error.');
+            }
+            break;
+
+        case 3:
+            try {
+                // Si l'usuari diu "tot bé" o la IA no veu anomalies, simplement la funció extractora retornarà un array buit
+                // Si l'usuari posa anomalies de debò, s'extrauran.
+                const extracted = await dataExtractor.extractDictamenData(text, state.data);
+                
+                if (extracted.anomalies && extracted.anomalies.length > 0) {
+                    if (!state.data.anomalies) state.data.anomalies = [];
+                    // Fusionem les anomalies d'aquesta petició o les substituïm directament
+                    state.data.anomalies = [...state.data.anomalies, ...extracted.anomalies];
+                }
+
+                await msg.reply(t(lang, 'generating_dictamen'));
+
+                // Formatejar la data actual automàticament (Data Revisió si no està escrita i també Data de firma per defecte)
+                if (!state.data.general) state.data.general = {};
+                const now = new Date();
+                const todayStr = `${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()}`;
+                if (!state.data.general.dataRevisio) state.data.general.dataRevisio = todayStr;
+
+                const docxPath = await formFiller.fillDictamenDocx(state.data as any, region);
+                if (fs.existsSync(docxPath)) {
+                    const media = MessageMedia.fromFilePath(docxPath);
+                    await client.sendMessage(msg.from, media, { caption: "✅ Aquí tens el teu Dictamen de Reconeixement amb els camps avaluats." });
+                }
+                dbService.clearSession(whatsappId);
+            } catch (err: any) {
+                await msg.reply(`❌ Error: ${err.message}`);
+                dbService.clearSession(whatsappId);
+            }
+            break;
+    }
+}
+
 
 const BRAND_HEADER = `🛡️ SENTINEL COVER | Assistent Tècnic
 Un servei de Effiguard Tech SL
@@ -384,7 +714,7 @@ client.on('qr', (qr) => {
     console.log('--- NEW QR CODE GENERATED ---');
     console.log('If the terminal QR is unreadable, open this link:');
     console.log(`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(qr)}`);
-    qrcode.generate(qr, { small: false });
+    qrcode.generate(qr, { small: true });
     console.log('Please scan the QR code above with your WhatsApp.');
 });
 
@@ -397,36 +727,51 @@ client.on('auth_failure', (msg) => {
 });
 
 client.on('ready', () => {
-    console.log('--- WHATSAPP BOT IS READY AND LISTENING ---');
-});
-
-client.on('change_state', state => {
-    console.log('--- CLIENT STATE CHANGED ---:', state);
-});
-
-client.on('loading_screen', (percent, message) => {
-    console.log('--- LOADING SCREEN ---', percent, message);
-});
-
-client.on('disconnected', (reason) => {
-    console.log('WhatsApp was disconnected:', reason);
+    readyTimestamp = Math.floor(Date.now() / 1000);
+    console.log(`--- WHATSAPP BOT IS READY AND LISTENING (Timestamp: ${readyTimestamp}) ---`);
 });
 
 client.on('message', async (msg) => {
+    // Ignore messages older than the bot's startup time
+    if (!readyTimestamp || msg.timestamp < readyTimestamp) {
+        console.log(`[IGNORE] Missatge antic de ${msg.from} precedit a l'arrencada (${msg.timestamp} < ${readyTimestamp})`);
+        return;
+    }
+
     const contact = await msg.getContact();
     const number = contact.number; // e.g., "34600000000"
     const from = msg.from;
 
     // 1. Whitelist Check (SQLite)
-    if (!dbService.isSubscriber(number)) {
+    const subscriber = dbService.getSubscriber(number);
+    if (!subscriber || subscriber.is_active === 0) {
         console.log(`[AUTH] Accés denegat per al número: ${number}`);
         return;
     }
 
+    const userRegion = subscriber.region || 'catalunya';
+    const userLanguage = subscriber.language || 'ca';
+
     // 2. Log Incoming Message
     dbService.logMessage(number, msg.body, 'user');
 
-    console.log(`[MSG] De: ${number} | Body: "${msg.body}" | Type: ${msg.type} | HasMedia: ${msg.hasMedia}`);
+    console.log(`[MSG] De: ${number} | Regió: ${userRegion} | Body: "${msg.body}" | Type: ${msg.type}`);
+
+    // Command to change region
+    if (msg.body.toLowerCase().startsWith('!regio ') || msg.body.toLowerCase().startsWith('!region ')) {
+        const newRegion = msg.body.split(' ')[1]?.toLowerCase();
+        const validRegions = ['catalunya', 'arago', 'valencia', 'madrid'];
+        if (validRegions.includes(newRegion)) {
+            const newLang = (newRegion === 'arago' || newRegion === 'valencia' || newRegion === 'madrid') ? 'es' : 'ca';
+            dbService.updateSubscriberRegion(number, newRegion);
+            dbService.updateSubscriberLanguage(number, newLang);
+            await msg.reply(`${t(newLang, 'region_updated')}*${newRegion}* (Idioma: ${newLang === 'es' ? 'Español' : 'Català'})`);
+            return;
+        } else {
+            await msg.reply(`${t(userLanguage, 'invalid_region')}${validRegions.join(', ')}`);
+            return;
+        }
+    }
 
     let userText = "";
     let isAudio = false;
@@ -438,8 +783,23 @@ client.on('message', async (msg) => {
     }
 
     // Trigger Welcome Message on "hola"
-    if (userText.toLowerCase().trim() === 'hola') {
-        const welcome = "Hola! Soc en Sentinel. Puc ajudar-te amb formularis BT (ELEC1, ELEC2, DR, Contracte) o resoldre dubtes tècnics de calderes. Què necessites?";
+    const isGreeting = userText.toLowerCase().trim() === 'hola';
+    if (isGreeting) {
+        const profilePath = path.join(process.cwd(), 'installer_profile_example.json');
+        let profileRegion = userRegion; // Fallback
+
+        if (fs.existsSync(profilePath)) {
+            const profile = JSON.parse(fs.readFileSync(profilePath, 'utf8'));
+            const city = profile.adreca?.poblacio?.toLowerCase() || '';
+            // Simple mapping for demo
+            if (city.includes('sabadell') || city.includes('barcelona') || city.includes('terrassa')) profileRegion = 'catalunya';
+            if (city.includes('madrid')) profileRegion = 'madrid';
+            if (city.includes('valencia')) profileRegion = 'valencia';
+            if (city.includes('zaragoza')) profileRegion = 'arago';
+        }
+
+        const welcomeKey = `welcome_${profileRegion}`;
+        const welcome = t(userLanguage, welcomeKey);
         await msg.reply(welcome);
         dbService.logMessage(number, welcome, 'bot');
         return;
@@ -476,62 +836,104 @@ client.on('message', async (msg) => {
     if (!userText) return;
 
     // --- FORM FILLING LOGIC START ---
-
-    // Check for existing session in DB
-    const state = dbService.getSession(from);
-
-    if (state && state.mode === 'form_elec1') {
-        await handleFormFlow(msg, state);
-        return;
-    }
-
-    if (state && state.mode === 'form_dr') {
-        await handleDRFormFlow(msg, state);
-        return;
-    }
-
-    if (state && state.mode === 'form_contract') {
-        await handleContractFormFlow(msg, state);
-        return;
-    }
-
-    if (state && state.mode === 'form_elec2') {
-        await handleElec2FormFlow(msg, state);
-        return;
+    const state = dbService.getSession(number);
+    if (state) {
+        if (state.mode === 'form_elec1') {
+            await handleFormFlow(msg, state, number, userRegion);
+            return;
+        }
+        if (state.mode === 'form_dr') {
+            await handleDRFormFlow(msg, state, number, userRegion);
+            return;
+        }
+        if (state.mode === 'form_contract') {
+            await handleContractFormFlow(msg, state, number, userRegion);
+            return;
+        }
+        if (state.mode === 'form_elec2') {
+            await handleElec2FormFlow(msg, state, number, userRegion);
+            return;
+        }
+        if (state.mode === 'form_elec3') {
+            await handleElec3FormFlow(msg, state, number, userRegion);
+            return;
+        }
+        if (state.mode === 'form_dictamen') {
+            await handleDictamenFormFlow(msg, state, number, userRegion);
+            return;
+        }
     }
 
     // New intent classification
     const classification = await classifierService.classifyIntent(userText);
     console.log(`[DEBUG] Classification: intent=${classification.intent}, formId=${classification.formId}`);
 
-    if (classification.intent === 'form_filling' && classification.formId === 'elec1') {
-        const newState: UserSession = { mode: 'form_elec1', step: 0, data: {} };
-        dbService.saveSession(from, newState);
-        await handleFormFlow(msg, newState);
+    // Phase 2 Block: Check if gas (technical_query) is enabled
+    const gasEnabled = process.env.GAS_ENABLED === 'true';
+    if (classification.intent === 'technical_query' && !gasEnabled) {
+        const lang = (dbService.getSession(number)?.language) || (dbService.getSubscriber(number)?.language) || 'ca';
+        await msg.reply(t(lang, 'gas_coming_soon'));
         return;
     }
 
-    if (classification.intent === 'form_filling' && classification.formId === 'dr_installacio') {
-        const newState: UserSession = { mode: 'form_dr', step: 0, data: {} };
-        dbService.saveSession(from, newState);
-        await handleDRFormFlow(msg, newState);
-        return;
+    if (classification.intent === 'form_filling') {
+        if (classification.formId === 'elec1') {
+            const newState: UserSession = { mode: 'form_elec1', step: 0, data: {}, region: userRegion };
+            dbService.saveSession(number, newState);
+            await handleFormFlow(msg, newState, number, userRegion);
+            return;
+        }
+        if (classification.formId === 'dr_installacio') {
+            const newState: UserSession = { mode: 'form_dr', step: 0, data: {}, region: userRegion };
+            dbService.saveSession(number, newState);
+            await handleDRFormFlow(msg, newState, number, userRegion);
+            return;
+        }
+        if (classification.formId === 'contracte_bt') {
+            const newState: UserSession = { mode: 'form_contract', step: 0, data: {}, region: userRegion };
+            dbService.saveSession(number, newState);
+            await handleContractFormFlow(msg, newState, number, userRegion);
+            return;
+        }
+        if (classification.formId === 'elec2_unifilar') {
+            const newState: UserSession = { mode: 'form_elec2', step: 0, data: {}, region: userRegion };
+            dbService.saveSession(number, newState);
+            await handleElec2FormFlow(msg, newState, number, userRegion);
+            return;
+        }
+        if (classification.formId === 'elec3_memoria') {
+            const newState: UserSession = { mode: 'form_elec3', step: 0, data: {}, region: userRegion };
+            dbService.saveSession(number, newState);
+            await handleElec3FormFlow(msg, newState, number, userRegion);
+            return;
+        }
+        if (classification.formId === 'dictamen_reconeixement') {
+            const newState: UserSession = { mode: 'form_dictamen', step: 0, data: {}, region: userRegion };
+            dbService.saveSession(number, newState);
+            await handleDictamenFormFlow(msg, newState, number, userRegion);
+            return;
+        }
     }
 
-    if (classification.intent === 'form_filling' && classification.formId === 'contracte_bt') {
-        const newState: UserSession = { mode: 'form_contract', step: 0, data: {} };
-        dbService.saveSession(from, newState);
-        await handleContractFormFlow(msg, newState);
+    if (classification.intent === 'general_chat') {
+        const profilePath = path.join(process.cwd(), 'installer_profile_example.json');
+        let profileRegion = userRegion;
+
+        if (fs.existsSync(profilePath)) {
+            const profile = JSON.parse(fs.readFileSync(profilePath, 'utf8'));
+            const city = profile.adreca?.poblacio?.toLowerCase() || '';
+            if (city.includes('sabadell') || city.includes('barcelona') || city.includes('terrassa')) profileRegion = 'catalunya';
+            if (city.includes('madrid')) profileRegion = 'madrid';
+            if (city.includes('valencia')) profileRegion = 'valencia';
+            if (city.includes('zaragoza')) profileRegion = 'arago';
+        }
+
+        const welcomeKey = `welcome_${profileRegion}`;
+        const welcome = t(userLanguage, welcomeKey);
+        await msg.reply(welcome);
+        dbService.logMessage(number, welcome, 'bot');
         return;
     }
-
-    if (classification.intent === 'form_filling' && classification.formId === 'elec2_unifilar') {
-        const newState: UserSession = { mode: 'form_elec2', step: 0, data: {} };
-        dbService.saveSession(from, newState);
-        await handleElec2FormFlow(msg, newState);
-        return;
-    }
-
     // --- FORM FILLING LOGIC END ---
 
     try {
@@ -910,4 +1312,9 @@ client.on('message', async (msg) => {
     }
 });
 
-client.initialize();
+try {
+    console.log('[DEBUG] Initializing WhatsApp client...');
+    client.initialize();
+} catch (startupError) {
+    console.error('[CRITICAL] Failed to initialize WhatsApp client:', startupError);
+}

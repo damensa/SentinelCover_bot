@@ -50,5 +50,29 @@
             "esquema",
             "croquis elèctric"
         ]
+    },
+    {
+        "id": "elec3_memoria",
+        "formal_name": "Memòria Tècnica (model ELEC-3)",
+        "description": "Memòria tècnica per a instal·lacions elèctriques de baixa tensió.",
+        "synonyms": [
+            "elec3",
+            "elec-3",
+            "memòria tècnica",
+            "memoria tecnica",
+            "memòria"
+        ]
+    },
+    {
+        "id": "dictamen_reconeixement",
+        "formal_name": "Dictamen de Reconeixement",
+        "description": "Dictamen de Reconeixement d'instal·lacions elèctriques de baixa tensió per a inspeccions periòdiques.",
+        "synonyms": [
+            "dictamen",
+            "reconeixement",
+            "inspecció periòdica",
+            "revisió periòdica",
+            "dictamen de reconeixement"
+        ]
     }
 ]

@@ -7,6 +7,8 @@ export interface UserSession {
     mode: string;
     step: number;
     data: any;
+    region?: string;
+    language?: string;
 }
 
 class DBService {
@@ -24,6 +26,8 @@ class DBService {
             CREATE TABLE IF NOT EXISTS subscribers (
                 whatsapp_id TEXT PRIMARY KEY,
                 name TEXT,
+                region TEXT DEFAULT 'catalunya',
+                language TEXT DEFAULT 'ca',
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
                 is_active INTEGER DEFAULT 1
             )
@@ -63,8 +67,20 @@ class DBService {
         return !!row;
     }
 
-    addSubscriber(whatsappId: string, name?: string) {
-        this.db.prepare('INSERT OR REPLACE INTO subscribers (whatsapp_id, name) VALUES (?, ?)').run(whatsappId, name || null);
+    addSubscriber(whatsappId: string, name?: string, region: string = 'catalunya', language: string = 'ca') {
+        this.db.prepare('INSERT OR REPLACE INTO subscribers (whatsapp_id, name, region, language) VALUES (?, ?, ?, ?)').run(whatsappId, name || null, region, language);
+    }
+
+    getSubscriber(whatsappId: string) {
+        return this.db.prepare('SELECT * FROM subscribers WHERE whatsapp_id = ?').get(whatsappId) as any;
+    }
+
+    updateSubscriberRegion(whatsappId: string, region: string) {
+        this.db.prepare('UPDATE subscribers SET region = ? WHERE whatsapp_id = ?').run(region, whatsappId);
+    }
+
+    updateSubscriberLanguage(whatsappId: string, language: string) {
+        this.db.prepare('UPDATE subscribers SET language = ? WHERE whatsapp_id = ?').run(language, whatsappId);
     }
 
     // --- Session Methods ---

@@ -14,24 +14,24 @@ const connection = {
 const formFiller = new FormFillerService();
 
 export const pdfWorker = new Worker('pdf-generation', async (job: Job) => {
-    const { type, data, from } = job.data;
-    console.log(`[WORKER] Processing ${type} for ${from}...`);
+    const { type, data, from, region } = job.data;
+    console.log(`[WORKER] Processing ${type} for ${from} in ${region || 'default'}...`);
 
     try {
         let pdfPath = '';
 
         switch (type) {
             case 'elec1':
-                pdfPath = await formFiller.fillELEC1PDF(data);
+                pdfPath = await formFiller.fillELEC1PDF(data, region);
                 break;
             case 'elec2':
-                pdfPath = await formFiller.fillElec2PDF(data);
+                pdfPath = await formFiller.fillElec2PDF(data); // Elec2 is currently generic
                 break;
             case 'dr':
-                pdfPath = await formFiller.fillDRPDF(data);
+                pdfPath = await formFiller.fillDRPDF(data, region);
                 break;
             case 'contract':
-                pdfPath = await formFiller.fillContractPDF(data);
+                pdfPath = await formFiller.fillContractPDF(data, region);
                 break;
         }
 

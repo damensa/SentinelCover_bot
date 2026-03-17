@@ -9,12 +9,13 @@ const connection = {
 export const pdfQueue = new Queue('pdf-generation', { connection });
 
 class QueueService {
-    async addPdfJob(type: 'elec1' | 'elec2' | 'dr' | 'contract', data: any, from: string) {
-        console.log(`[QUEUE] Adding ${type} job for ${from}`);
+    async addPdfJob(type: 'elec1' | 'elec2' | 'dr' | 'contract', data: any, from: string, region: string = 'catalunya') {
+        console.log(`[QUEUE] Adding ${type} job for ${from} in ${region}`);
         await pdfQueue.add('generate-pdf', {
             type,
             data,
-            from
+            from,
+            region
         }, {
             attempts: 3,
             backoff: {
