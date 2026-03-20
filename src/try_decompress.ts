@@ -17,7 +17,7 @@ files.forEach(file => {
             console.log(`✅ Success! Decompressed ${file}.`);
             console.log('Preview:', decoded.toString('utf8').substring(0, 200));
             fs.writeFileSync(filePath + '.decompressed.xml', decoded);
-        } catch (e) {
+        } catch (e: any) {
             console.log(`❌ Failed to decompress ${file}: ${e.message}`);
             // Check first bytes
             console.log(`First hex bytes: ${buffer.subarray(0, 10).toString('hex')}`);

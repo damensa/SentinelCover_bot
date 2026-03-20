@@ -1,9 +1,27 @@
-console.log('[DEBUG] whatsapp.ts entry point');
-process.on('unhandledRejection', (reason, promise) => {
-    console.error('[CRITICAL] Unhandled Rejection at:', promise, 'reason:', reason);
+process.on('SIGINT', async () => {
+    console.log('[DEBUG] SIGINT received. Closing client...');
+    if (client) {
+        try {
+            await client.destroy();
+            console.log('[DEBUG] Client destroyed successfully.');
+        } catch (e) {
+            console.error('[ERROR] Error destroying client:', e);
+        }
+    }
+    process.exit(0);
 });
-process.on('uncaughtException', (err) => {
-    console.error('[CRITICAL] Uncaught Exception:', err);
+
+process.on('SIGTERM', async () => {
+    console.log('[DEBUG] SIGTERM received. Closing client...');
+    if (client) {
+        try {
+            await client.destroy();
+            console.log('[DEBUG] Client destroyed successfully.');
+        } catch (e) {
+            console.error('[ERROR] Error destroying client:', e);
+        }
+    }
+    process.exit(0);
 });
 import pkg from 'whatsapp-web.js';
 const { Client, LocalAuth, MessageMedia } = pkg;
@@ -692,20 +710,23 @@ const openai = new OpenAI({
 export const client = new Client({
     authStrategy: new LocalAuth(),
     puppeteer: {
-        headless: true,
-        executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined,
+        headless: true, // Tornem a headless: true
+        executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
         args: [
             '--no-sandbox',
             '--disable-setuid-sandbox',
             '--disable-dev-shm-usage',
-            '--disable-accelerated-2d-canvas',
-            '--no-first-run',
-            '--no-zygote',
             '--disable-gpu',
-            '--disable-extensions'
+            '--no-first-run',
         ],
     },
-    authTimeoutMs: 60000,
+    /*
+    webVersionCache: {
+        type: 'remote',
+        remotePath: 'https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/2.2412.54.html',
+    },
+    */
+    authTimeoutMs: 120000,
     qrMaxRetries: 10,
     restartOnAuthFail: true,
 });
@@ -1314,7 +1335,11 @@ client.on('message', async (msg) => {
 
 try {
     console.log('[DEBUG] Initializing WhatsApp client...');
-    client.initialize();
-} catch (startupError) {
-    console.error('[CRITICAL] Failed to initialize WhatsApp client:', startupError);
+    client.initialize().catch(e => {
+        console.error('[CRITICAL] Async initialization error:', e);
+        if (e && e.stack) console.error('[CRITICAL] Async Stack:', e.stack);
+    });
+} catch (startupError: any) {
+    console.error('[CRITICAL] Failed to initialize WhatsApp client (Sync):', startupError);
+    if (startupError && startupError.stack) console.error('[CRITICAL] Sync Stack:', startupError.stack);
 }

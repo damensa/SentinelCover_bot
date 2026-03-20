@@ -535,6 +535,7 @@ export class FormFillerService {
         const doc = new Docxtemplater(zip, {
             paragraphLoop: true,
             linebreaks: true,
+            nullGetter() { return ""; }
         });
 
         const profile = this.loadInstallerProfile() || {};
@@ -592,6 +593,7 @@ export class FormFillerService {
         const doc = new Docxtemplater(zip, {
             paragraphLoop: true,
             linebreaks: true,
+            nullGetter() { return ""; }
         });
 
         const profile = this.loadInstallerProfile() || {};

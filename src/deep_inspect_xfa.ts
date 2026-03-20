@@ -53,7 +53,7 @@ async function deepInspectXFA() {
                             try {
                                 decodedBytes = zlib.unzipSync(Buffer.from(rawBytes));
                                 console.log('    ✅ Decompressed successfully with zlib!');
-                            } catch (e) {
+                            } catch (e: any) {
                                 console.log(`    ⚠️ zlib decompression failed: ${e.message}. Saving raw.`);
                             }
                         }
@@ -72,7 +72,7 @@ async function deepInspectXFA() {
                         fs.writeFileSync(filename, decodedBytes);
                         console.log(`    Saved to ${filename} (${decodedBytes.length} bytes)`);
 
-                    } catch (e) {
+                    } catch (e: any) {
                         console.log(`    Error reading stream: ${e.message}`);
                     }
                 }

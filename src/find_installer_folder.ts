@@ -11,7 +11,7 @@ async function findFolder() {
         fields: 'files(id, name)',
     });
 
-    const folders = res.data.files;
+    const folders = res.data.files || [];
     if (!folders || folders.length === 0) {
         console.log('Folder not found. Searching for any folder containing "instaladors"...');
         const secondaryRes = await drive.files.list({

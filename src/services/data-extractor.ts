@@ -293,6 +293,8 @@ export class DataExtractorService {
 
             IMPORTANT:
             - "tipusActuacio" normalment és Nova, Ampliació o Reforma.
+            - UNITATS: No incloguis unitats (kW, V, A, mm2, m, ohms) en els valors. Retorna NOMÉS el número. 
+              Exemple: En lloc de "10 kW", retorna "10". En lloc de "16 mm2", retorna "16".
             - L'usuari ens donarà dades generals lligades a "general", detalls d'un circuit en concret lligats a "circuit", o detalls d'un diferencial a "diferencial".
             - No inventis dades, si no hi són deixa null.
             - "encastat" o "noEncastat" han de portar el valor "X" depenent de si el tub va sota paret (encastat=X, noEncastat=" ") o per fora (encastat=" ", noEncastat=X).

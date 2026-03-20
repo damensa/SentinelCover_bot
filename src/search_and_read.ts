@@ -26,14 +26,16 @@ async function searchAndRead() {
     if (targetFile.mimeType === 'application/vnd.google-apps.document') {
         console.log('Reading content...');
         try {
-            const doc = await docs.documents.get({ documentId: targetFile.id });
-            const text = doc.data.body?.content?.map((c: any) =>
+            const docId = targetFile.id as string;
+            const res = await docs.documents.get({ documentId: docId });
+            const doc = res.data;
+            const text = doc.body?.content?.map((c: any) =>
                 c.paragraph?.elements?.map((e: any) => e.textRun?.content).join('')
             ).join('\n') || '';
             console.log('--- CONTENT START ---');
             console.log(text);
             console.log('--- CONTENT END ---');
-        } catch (err) {
+        } catch (err: any) {
             console.error('Error reading doc:', err.message);
         }
     } else {
